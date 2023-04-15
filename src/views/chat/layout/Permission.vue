@@ -35,7 +35,7 @@ async function handleVerify() {
   }
   catch (error: any) {
     ms.error(error.message ?? 'error')
-    authStore.removeToken()
+    authStore.logout()
     token.value = ''
   }
   finally {

@@ -1,6 +1,6 @@
-import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
-import { post } from '@/utils/request'
-import { useAuthStore, useSettingStore } from '@/store'
+import type {AxiosProgressEvent, GenericAbortSignal} from 'axios'
+import {get, post} from '@/utils/request'
+import {useAuthStore, useSettingStore} from '@/store'
 
 export function fetchChatAPI<T = any>(
   prompt: string,
@@ -9,7 +9,7 @@ export function fetchChatAPI<T = any>(
 ) {
   return post<T>({
     url: '/chat',
-    data: { prompt, options },
+    data: {prompt, options},
     signal,
   })
 }
@@ -25,7 +25,8 @@ export function fetchChatAPIProcess<T = any>(
     prompt: string
     options?: { conversationId?: string; parentMessageId?: string }
     signal?: GenericAbortSignal
-    onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
+    onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void
+  },
 ) {
   const settingStore = useSettingStore()
   const authStore = useAuthStore()
@@ -45,22 +46,44 @@ export function fetchChatAPIProcess<T = any>(
   }
 
   return post<T>({
-    url: '/chat-process',
+    url: '/chat/sse',
     data,
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
   })
 }
 
-export function fetchSession<T>() {
+export function fetchServerStatus<T>() {
+  return get<T>({
+    url: '/server/status',
+  })
+}
+
+export function authLogin<T>(username: string, password: string) {
   return post<T>({
-    url: '/session',
+    url: 'auth/login/withPassword',
+    data: {
+      username,
+      password,
+    },
+  })
+}
+
+export function checkToken<T>() {
+  return get<T>({
+    url: 'auth/checkToken',
+  })
+}
+
+export function fetchSession<T>() {
+  return get<T>({
+    url: '/yy/ping',
   })
 }
 
 export function fetchVerify<T>(token: string) {
   return post<T>({
     url: '/verify',
-    data: { token },
+    data: {token},
   })
 }

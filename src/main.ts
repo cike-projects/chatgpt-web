@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import naive from 'naive-ui'
 import App from './App.vue'
 import { setupI18n } from './locales'
 import { setupAssets, setupScrollbarStyle } from './plugins'
@@ -16,7 +17,7 @@ async function bootstrap() {
   setupI18n(app)
 
   await setupRouter(app)
-
+  app.use(naive)
   app.mount('#app')
 }
 

@@ -9,12 +9,14 @@ interface SessionResponse {
 }
 
 export interface AuthState {
+  isLoggedIn: boolean
   token: string | undefined
   session: SessionResponse | null
 }
 
 export const useAuthStore = defineStore('auth-store', {
   state: (): AuthState => ({
+    isLoggedIn: getToken() != null,
     token: getToken(),
     session: null,
   }),
@@ -37,14 +39,21 @@ export const useAuthStore = defineStore('auth-store', {
       }
     },
 
-    setToken(token: string) {
+    loginSuccess(token: string) {
       this.token = token
+      this.isLoggedIn = true
+      this.session = { auth: true, model: 'ChatGPTAPI' }
       setToken(token)
     },
 
-    removeToken() {
+    logout() {
       this.token = undefined
       removeToken()
+    },
+
+    setToken(token: string) {
+      this.token = token
+      setToken(token)
     },
   },
 })

@@ -364,6 +364,15 @@ const dataSource = computed(() => {
                 </template>
                 {{ $t('store.clearStoreConfirm') }}
               </NPopconfirm>
+              <NPopconfirm @positive-click="clearPromptTemplate">
+                <template #trigger>
+                  <NButton size="small">
+                    服务器同步
+                  </NButton>
+                </template>
+                确认要和服务器同步吗？
+                {{ $t('store.clearStoreConfirm') }}
+              </NPopconfirm>
             </div>
             <div class="flex items-center">
               <NInput v-model:value="searchValue" style="width: 100%" />

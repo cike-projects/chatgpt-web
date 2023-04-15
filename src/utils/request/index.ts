@@ -24,12 +24,11 @@ function http<T = any>(
 ) {
   const successHandler = (res: AxiosResponse<Response<T>>) => {
     const authStore = useAuthStore()
-
     if (res.data.status === 'Success' || typeof res.data === 'string')
       return res.data
 
     if (res.data.status === 'Unauthorized') {
-      authStore.removeToken()
+      authStore.logout()
       window.location.reload()
     }
 
@@ -38,6 +37,11 @@ function http<T = any>(
 
   const failHandler = (error: Response<Error>) => {
     afterRequest?.()
+    if (error.response.status === 401) {
+      useAuthStore().logout()
+      window.location.reload()
+    }
+
     throw new Error(error?.message || 'Error')
   }
 
