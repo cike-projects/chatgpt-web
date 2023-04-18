@@ -72,6 +72,7 @@ export default {
     httpsProxy: 'HTTPS Proxy',
     balance: 'API余额',
     monthlyUsage: '本月使用量',
+    declaration: '声明',
   },
   store: {
     siderButton: '提示词商店',
