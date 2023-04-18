@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import {ref} from 'vue'
+import { ref } from 'vue'
 
 import type {
   FormInst,
   FormRules,
 } from 'naive-ui'
 
-import {useMessage} from 'naive-ui'
-import {useAuthStoreWithout} from '@/store/modules/auth'
+import { useMessage } from 'naive-ui'
+import { useRouter } from 'vue-router'
+import { useAuthStoreWithout } from '@/store/modules/auth'
 
-import {authLogin} from '@/api'
-import {useRouter} from 'vue-router'
+import { authLogin } from '@/api'
 
 interface ModelType {
   username: string | null
@@ -57,14 +57,15 @@ function handleValidateButtonClick(e: MouseEvent) {
   e.preventDefault()
   formRef.value?.validate((errors) => {
     if (!errors) {
-      authLogin(modelRef.value.username, modelRef.value.password).then(response => {
+      authLogin(modelRef.value.username, modelRef.value.password).then((response) => {
         // 登录成功
         authStore.loginSuccess(response.data)
         router.push({ name: 'Chat' })
-      }).catch(error => {
+      }).catch((error) => {
         message.error(error.message)
       })
-    } else {
+    }
+    else {
       message.error('验证失败')
     }
   })
@@ -76,7 +77,7 @@ function handleValidateButtonClick(e: MouseEvent) {
     <NCard embedded class="login-card" title="欢迎回来">
       <n-form ref="formRef" :model="modelRef" :rules="rules">
         <n-form-item path="username" label="用户名">
-          <n-input v-model:value="modelRef.username"/>
+          <n-input v-model:value="modelRef.username" />
         </n-form-item>
         <n-form-item path="password" label="密码">
           <n-input
