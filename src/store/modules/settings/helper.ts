@@ -6,6 +6,7 @@ export interface SettingsState {
   systemMessage: string
   temperature: number
   top_p: number
+  useContext: boolean
 }
 
 export function defaultSetting(): SettingsState {
@@ -13,6 +14,7 @@ export function defaultSetting(): SettingsState {
     systemMessage: 'You are ChatGPT, a large language model trained by OpenAI. Follow the user\'s instructions carefully. Respond using markdown.',
     temperature: 0.8,
     top_p: 1,
+    useContext: false,
   }
 }
 
