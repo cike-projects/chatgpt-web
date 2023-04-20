@@ -14,9 +14,9 @@ export function fetchChatAPI<T = any>(
   })
 }
 
-export function fetchChatConfig<T = any>() {
-  return post<T>({
-    url: '/config',
+export function fetchBillingUsage<T>() {
+  return get<T>({
+    url: '/dashboard/billing/usage',
   })
 }
 

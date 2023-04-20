@@ -73,6 +73,7 @@ export default {
     balance: 'API Balance',
     monthlyUsage: 'Monthly Usage',
     declaration: 'Declaration',
+    billing: 'Billing',
   },
   store: {
     siderButton: 'Prompt Store',

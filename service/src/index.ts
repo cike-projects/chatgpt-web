@@ -1,7 +1,7 @@
 import express from 'express'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
-import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
+import { chatReplyProcess, currentModel } from './chatgpt'
 import { auth } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
@@ -42,16 +42,6 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
   }
   finally {
     res.end()
-  }
-})
-
-router.post('/config', auth, async (req, res) => {
-  try {
-    const response = await chatConfig()
-    res.send(response)
-  }
-  catch (error) {
-    res.send(error)
   }
 })
 

@@ -1,8 +1,6 @@
 <script setup lang='ts'>
 import { computed, onMounted, ref } from 'vue'
 import { NSpin } from 'naive-ui'
-import { fetchChatConfig } from '@/api'
-import pkg from '@/../package.json'
 import { useAuthStore } from '@/store'
 
 interface ConfigState {
@@ -25,8 +23,14 @@ const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 async function fetchConfig() {
   try {
     loading.value = true
-    const { data } = await fetchChatConfig<ConfigState>()
-    config.value = data
+    // const { data } = await fetchChatConfig<ConfigState>()
+    config.value = {
+      timeoutMs: 10_000,
+      reverseProxy: '',
+      apiModel: 'gpt-3.5-turbo',
+      socksProxy: '',
+      httpsProxy: '',
+    }
   }
   finally {
     loading.value = false
@@ -42,9 +46,6 @@ onMounted(() => {
   <NSpin :show="loading">
     <div class="p-4 space-y-4">
       <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
-      <p v-if="isChatGPTAPI">
-        {{ $t("setting.monthlyUsage") }}：{{ config?.usage ?? '-' }}
-      </p>
       <p v-if="!isChatGPTAPI">
         {{ $t("setting.reverseProxy") }}：{{ config?.reverseProxy ?? '-' }}
       </p>

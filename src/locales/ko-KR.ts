@@ -73,6 +73,7 @@ export default {
     balance: 'API 잔액',
     monthlyUsage: '월 사용량',
     declaration: 'Declaration',
+    billing: 'Billing',
   },
   store: {
     siderButton: '프롬프트 저장소',

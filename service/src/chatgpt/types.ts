@@ -13,7 +13,3 @@ export interface RequestOptions {
 export interface SetProxyOptions {
   fetch?: typeof fetch
 }
-
-export interface UsageResponse {
-  total_usage: number
-}

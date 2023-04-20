@@ -5,6 +5,7 @@ import General from './General.vue'
 import Advanced from './Advanced.vue'
 import About from './About.vue'
 import Declaration from './Declaration.vue'
+import Billing from "@/components/common/Setting/Billing.vue";
 import { useAuthStore } from '@/store'
 import { SvgIcon } from '@/components/common'
 
@@ -65,15 +66,20 @@ const show = computed({
           </template>
           <About />
         </NTabPane>
+        <NTabPane name="Billing" tab="Billing">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="material-symbols:money-outline" />
+            <span class="ml-2">{{ $t('setting.billing') }}</span>
+          </template>
+          <Billing />
+        </NTabPane>
         <NTabPane name="Declaration" tab="Declaration">
           <template #tab>
-            <SvgIcon class="text-lg" icon="ri:list-settings-line" />
+            <SvgIcon class="text-lg" icon="fa6-regular:hand-peace" />
             <span class="ml-2">{{ $t('setting.declaration') }}</span>
           </template>
           <Declaration />
         </NTabPane>
-
-
       </NTabs>
     </div>
   </NModal>
