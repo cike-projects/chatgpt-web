@@ -14,7 +14,7 @@ export function defaultSetting(): SettingsState {
     systemMessage: 'You are ChatGPT, a large language model trained by OpenAI. Follow the user\'s instructions carefully. Respond using markdown.',
     temperature: 0.8,
     top_p: 1,
-    useContext: false,
+    useContext: true,
   }
 }
 
