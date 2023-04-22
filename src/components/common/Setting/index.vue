@@ -5,7 +5,8 @@ import General from './General.vue'
 import Advanced from './Advanced.vue'
 import About from './About.vue'
 import Declaration from './Declaration.vue'
-import Billing from "@/components/common/Setting/Billing.vue";
+import Billing from '@/components/common/Setting/Billing.vue'
+import Plugins from '@/components/common/Setting/Plugins.vue'
 import { useAuthStore } from '@/store'
 import { SvgIcon } from '@/components/common'
 
@@ -38,7 +39,7 @@ const show = computed({
 </script>
 
 <template>
-  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 640px">
+  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 900px">
     <div>
       <NTabs v-model:value="active" type="line" animated>
         <NTabPane name="General" tab="General">
@@ -65,6 +66,13 @@ const show = computed({
             <span class="ml-2">{{ $t('setting.config') }}</span>
           </template>
           <About />
+        </NTabPane>
+        <NTabPane name="Plugins" tab="Plugins">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="material-symbols:money-outline" />
+            <span class="ml-2">{{ $t('setting.plugins') }}</span>
+          </template>
+          <Plugins />
         </NTabPane>
         <NTabPane name="Billing" tab="Billing">
           <template #tab>

@@ -74,6 +74,7 @@ export default {
     monthlyUsage: '本月使用量',
     declaration: '声明',
     billing: '账单',
+    plugins: '插件',
   },
   store: {
     siderButton: '提示词商店',

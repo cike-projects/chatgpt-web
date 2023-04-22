@@ -74,6 +74,7 @@ export default {
     monthlyUsage: 'Monthly Usage',
     declaration: 'Declaration',
     billing: 'Billing',
+    plugins: 'Plugins',
   },
   store: {
     siderButton: 'Prompt Store',

@@ -74,6 +74,7 @@ export default {
     monthlyUsage: '월 사용량',
     declaration: 'Declaration',
     billing: 'Billing',
+    plugins: 'Plugins',
   },
   store: {
     siderButton: '프롬프트 저장소',

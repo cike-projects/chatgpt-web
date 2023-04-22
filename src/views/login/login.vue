@@ -1,16 +1,11 @@
 <script lang="ts" setup>
-import {ref} from 'vue'
+import { ref } from 'vue'
 
-import type {
-  FormInst,
-  FormRules,
-} from 'naive-ui'
+import { useMessage } from 'naive-ui'
+import { useRouter } from 'vue-router'
+import { useAuthStoreWithout } from '@/store/modules/auth'
 
-import {useMessage} from 'naive-ui'
-import {useRouter} from 'vue-router'
-import {useAuthStoreWithout} from '@/store/modules/auth'
-
-import {authLogin} from '@/api'
+import { authLogin } from '@/api'
 
 interface ModelType {
   username: string | null
@@ -19,7 +14,6 @@ interface ModelType {
 
 const authStore = useAuthStoreWithout()
 const router = useRouter()
-const formRef = ref<FormInst | null>(null)
 const message = useMessage()
 window.$message = message
 const modelRef = ref<ModelType>({
@@ -27,91 +21,211 @@ const modelRef = ref<ModelType>({
   password: null,
 })
 
-const rules: FormRules = {
-  username: [
-    {
-      required: true,
-      message: '请输入用户名',
-      trigger: ['input', 'blur'],
-    },
-  ],
-  password: [
-    {
-      required: true,
-      message: '请输入密码',
-      trigger: ['input', 'blur'],
-    },
-  ],
-}
-
-function handleValidateButtonClick(e: MouseEvent) {
-  e.preventDefault()
-  formRef.value?.validate((errors) => {
-    if (!errors) {
-      authLogin(modelRef.value.username, modelRef.value.password).then((response) => {
-        // 登录成功
-        authStore.loginSuccess(response.data)
-        router.push({name: 'Chat'})
-      }).catch((error) => {
-        message.error(error.message)
-      })
-    } else {
-      message.error('验证失败')
-    }
+function handleValidateButtonClick() {
+  if (!modelRef.value.username) {
+    message.error('请输入用户名')
+    return
+  }
+  if (!modelRef.value.password) {
+    message.error('请输入密码')
+    return
+  }
+  authLogin(modelRef.value.username, modelRef.value.password).then((response) => {
+    // 登录成功
+    authStore.loginSuccess(response.data)
+    router.push({name: 'Chat'})
+  }).catch((error) => {
+    message.error(error.message)
   })
 }
 </script>
 
 <template>
-  <div class="login_bg">
-    <div class="login-container">
-      <NCard embedded class="login-card" title="欢迎回来">
-        <n-form ref="formRef" :model="modelRef" :rules="rules">
-          <n-form-item path="username" label="用户名">
-            <n-input v-model:value="modelRef.username"/>
-          </n-form-item>
-          <n-form-item path="password" label="密码">
-            <n-input
-              v-model:value="modelRef.password"
-              type="password"
-            />
-          </n-form-item>
-          <n-row :gutter="[0, 24]">
-            <n-col :span="24">
-              <div style="display: flex; justify-content: flex-end">
-                <n-button
-                  :disabled="modelRef.username === null || modelRef.password === null"
-                  round
-                  type="primary"
-                  @click="handleValidateButtonClick"
-                >
-                  登录
-                </n-button>
-              </div>
-            </n-col>
-          </n-row>
-        </n-form>
-      </NCard>
+  <div class="body">
+    <!-- login/register container -->
+    <div class="container">
+      <!-- register -->
+      <div class="form-container sign-up-container">
+        <div class="form">
+          <h2>sign up</h2>
+          <input type="text" placeholder="Username...">
+          <input type="email" placeholder="Email...">
+          <input type="password" placeholder="Password...">
+          <button class="signUp">sign up</button>
+        </div>
+      </div>
+      <!-- login -->
+      <div class="form-container sign-in-container">
+        <div class="form">
+          <h2>sign in</h2>
+          <input v-model="modelRef.username" type="text" placeholder="Username...">
+          <input v-model="modelRef.password" type="password" placeholder="Password...">
+          <button class="signIn" @click="handleValidateButtonClick">sign in</button>
+        </div>
+      </div>
+      <!-- overlay container -->
+      <div class="overlay_container">
+        <div class="overlay">
+          <!-- overlay left -->
+          <div class="overlay_panel overlay_left_container">
+            <h2>welcome back!</h2>
+            <p>To keep connected with us please login with your personal info</p>
+            <button id="sign-in">sign in</button>
+          </div>
+          <!-- overlay right -->
+          <div class="overlay_panel overlay_right_container">
+            <h2>hello friend!</h2>
+            <p>Enter your personal details and start journey with us</p>
+            <button id="sign-up">sign up</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.login_bg {
-  height: 100%;
-  background: #ffffff url(@/assets/bg_0.png) repeat
+.body {
+  background: #f6f5f7 url(@/assets/bg_0.png) repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-.login-container {
+h2 {
+  margin-bottom: 10px;
+  font-size: 32px;
+  text-transform: capitalize;
+}
+
+.container {
+  position: relative;
+  width: 768px;
+  height: 480px;
+  background-color: white;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.form-container {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background-color: white;
+  transition: all 0.6s ease-in-out;
+}
+
+.form {
   display: flex;
-  justify-content: right;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   height: 100%;
-  margin-right: 250px;
+  width: 100%;
+  padding: 0 50px;
 }
 
-.login-card {
-  width: 400px;
-  background-color: #ffffff;
+input {
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px;
+  background-color: #eee;
+  border: none;
+}
+
+.forget-password {
+  display: inline-block;
+  height: 20px;
+  text-decoration: none;
+  color: #bbb;
+  text-transform: capitalize;
+  font-size: 12px;
+}
+
+.forget-password:hover {
+  color: lightslategray;
+  border-bottom: 2px solid #ff4b2b;
+}
+
+button {
+  background: #ff4b2b;
+  padding: 10px 50px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  text-transform: uppercase;
+  color: white;
+  margin-top: 10px;
+  outline: none;
+  transition: transform 80;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.overlay_container {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  z-index: 100;
+  right: 0;
+  overflow: hidden;
+  transition: all 0.6s ease-in-out;
+}
+
+.overlay {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  left: -100%;
+  background-color: #ff4b2b;
+}
+
+.overlay_panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+  color: white;
+  padding: 0 40px;
+  text-align: center;
+}
+
+.overlay_panel button {
+  background-color: transparent;
+  border: 1px solid white;
+}
+
+.overlay_panel p {
+  font-size: 12px;
+  margin: 10px 0 15px 0;
+}
+
+.overlay_right_container {
+  right: 0;
+}
+
+.container.active .sign-up-container {
+  transform: translateX(100%);
+  z-index: 5;
+}
+
+.container.active .sign-in-container {
+  transform: translateX(100%);
+}
+
+.container.active .overlay_container {
+  transform: translateX(-100%);
+}
+
+.container.active .overlay {
+  transform: translateX(50%);
 }
 </style>
