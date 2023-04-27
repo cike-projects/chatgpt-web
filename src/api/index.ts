@@ -49,7 +49,7 @@ export function fetchChatAPIProcess<T = any>(
   }
 
   return post<T>({
-    url: '/chat/octet-stream',
+    url: '/chat/stream',
     data,
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
