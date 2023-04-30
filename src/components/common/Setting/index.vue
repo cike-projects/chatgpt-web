@@ -3,7 +3,6 @@ import { computed, ref } from 'vue'
 import { NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
 import Advanced from './Advanced.vue'
-import About from './About.vue'
 import Declaration from './Declaration.vue'
 import Billing from '@/components/common/Setting/Billing.vue'
 import Plugins from '@/components/common/Setting/Plugins.vue'
@@ -59,13 +58,6 @@ const show = computed({
           <div class="min-h-[100px]">
             <Advanced />
           </div>
-        </NTabPane>
-        <NTabPane name="Config" tab="Config">
-          <template #tab>
-            <SvgIcon class="text-lg" icon="ri:list-settings-line" />
-            <span class="ml-2">{{ $t('setting.config') }}</span>
-          </template>
-          <About />
         </NTabPane>
         <NTabPane name="Plugins" tab="Plugins">
           <template #tab>
