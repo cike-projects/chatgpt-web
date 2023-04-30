@@ -4,16 +4,22 @@ import { defaultSetting, getLocalState, setLocalState } from './helper'
 
 import { checkToken } from '@/api'
 
+interface CurrentUserInfo {
+  nickname: string
+  avatar: string
+  description: string | null
+}
+
 export const useUserStore = defineStore('user-store', {
   state: (): UserState => getLocalState(),
   actions: {
     async getUserInfo() {
       try {
-        const { data } = await checkToken()
+        const { data } = await checkToken<CurrentUserInfo>()
         this.userInfo = {
           avatar: data.avatar,
-          name: data.username,
-          description: data.description ?? 'Star',
+          nickname: data.nickname,
+          description: data.description ?? '',
         }
         return Promise.resolve(data)
       }
