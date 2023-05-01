@@ -10,7 +10,7 @@ const router = useRouter()
 const appStore = useAppStore()
 const chatStore = useChatStore()
 
-router.replace({name: 'Chat', params: {uuid: chatStore.active}})
+// router.replace({name: 'SQLChat', params: {uuid: chatStore.active}})
 
 const {isMobile} = useBasicLayout()
 

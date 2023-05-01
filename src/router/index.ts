@@ -3,6 +3,8 @@ import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { setupPageGuard } from './permission'
 import { ChatLayout } from '@/views/chat/layout'
+import { ChatLayout as SQLChatLayout } from '@/views/sqlchat/layout'
+import MainLayout from '@/views/main/MainLayout.vue'
 import Login from '@/views/login/login.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -14,14 +16,30 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Root',
-    component: ChatLayout,
+    component: MainLayout,
     redirect: '/chat',
     children: [
       {
-        path: '/chat/:uuid?',
-        name: 'Chat',
-        component: () => import('@/views/chat/index.vue'),
-        meta: { requiresAuth: true },
+        path: '/chatLayout',
+        name: 'ChatLayout',
+        component: ChatLayout,
+        children: [{
+          path: '/chat/:uuid?',
+          name: 'Chat',
+          component: () => import('@/views/chat/index.vue'),
+          meta: { requiresAuth: true },
+        }],
+      },
+      {
+        path: '/SQLChatLayout',
+        name: 'SQLChatLayout',
+        component: SQLChatLayout,
+        children: [{
+          path: '/sql-chat/:uuid?',
+          name: 'SQLChat',
+          component: () => import('@/views/sqlchat/index.vue'),
+          meta: { requiresAuth: true },
+        }],
       },
     ],
   },

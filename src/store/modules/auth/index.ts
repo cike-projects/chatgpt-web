@@ -10,7 +10,7 @@ export interface AuthState {
 export const useAuthStore = defineStore('auth-store', {
   state: (): AuthState => ({
     isLoggedIn: getToken() != null,
-    token: getToken()
+    token: getToken(),
   }),
 
   getters: {
