@@ -15,8 +15,6 @@ const temperature = ref(settingStore.temperature ?? 0.5)
 
 const top_p = ref(settingStore.top_p ?? 1)
 
-const useContext = ref(settingStore.useContext ?? false)
-
 function updateSettings(options: Partial<SettingsState>) {
   settingStore.updateSetting(options)
   ms.success(t('common.success'))
@@ -60,19 +58,6 @@ function handleReset() {
         <NButton size="tiny" text type="primary" @click="updateSettings({ top_p })">
           {{ $t('common.save') }}
         </NButton>
-      </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[120px]"> 支持上下文 </span>
-        <div class="flex flex-wrap items-center gap-4">
-          <n-switch v-model:value="useContext" :round="false" @update:value="value => updateSettings({ useContext })">
-            <template #checked>
-              开启支持上下文会消耗更多的 Token
-            </template>
-            <template #unchecked>
-              如果提问无明显关联，可以减少 Token 的使用
-            </template>
-          </n-switch>
-        </div>
       </div>
       <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[120px]">&nbsp;</span>

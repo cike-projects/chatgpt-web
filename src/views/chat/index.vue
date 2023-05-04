@@ -116,7 +116,7 @@ async function onConversation() {
           const xhr = event.target
           const { responseText } = xhr
           // Always process the final line
-          console.info(eventIndex, responseText.split('\n'))
+          // console.info(eventIndex, responseText.split('\n'))
           eventIndex++
           const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
           let chunk = responseText
@@ -138,7 +138,7 @@ async function onConversation() {
               },
             )
 
-            if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
+            if (openLongReply && data.finishReason === 'length') {
               options.parentMessageId = data.id
               lastText = data.text
               message = ''
@@ -270,7 +270,7 @@ async function onRegenerate(index: number) {
               },
             )
 
-            if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
+            if (openLongReply && data.finishReason === 'length') {
               options.parentMessageId = data.id
               lastText = data.text
               message = ''

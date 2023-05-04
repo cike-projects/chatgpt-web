@@ -7,6 +7,7 @@ interface PluginInfo {
   title?: string
   description?: string
   switcher?: boolean
+  disabled?: boolean
 }
 
 const pluginInfosRef = ref<PluginInfo[]>()
@@ -17,17 +18,18 @@ pluginInfosRef.value = [
     title: 'Chat',
     description: '随便聊聊.',
     switcher: true,
-  },
-  {
-    image: 'https://picsum.photos/id/8/100/100',
-    title: 'Explain code',
-    description: 'Explain a complicated piece of code.',
-    switcher: false,
+    disabled: true,
   },
   {
     image: 'https://picsum.photos/id/8/100/100',
     title: 'SQL translate',
     description: 'Translate natural language to SQL queries.',
+    switcher: false,
+  },
+  {
+    image: 'https://picsum.photos/id/8/100/100',
+    title: 'Explain code',
+    description: 'Explain a complicated piece of code.',
     switcher: false,
   },
   {
@@ -65,7 +67,7 @@ const loading = ref(false)
             {{ p.description }}
           </template>
           <template #footer>
-            <n-switch v-model:value="p.switcher" :round="false">
+            <n-switch v-model:value="p.switcher" :round="false" :disabled="p.disabled">
               <template #checked>
                 自然赠予你，树冠 微风 肩头的暴雨
               </template>
