@@ -3,7 +3,8 @@ import { computed, ref } from 'vue'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { HoverButton, Setting, SimpleUserAvatar, SvgIcon } from '@/components/common'
 import {useRouter} from "vue-router";
-
+import {useMessage} from "naive-ui";
+const message = useMessage()
 const { isMobile } = useBasicLayout()
 
 const getMobileClass = computed(() => {
@@ -26,7 +27,7 @@ const gotoRoute = function (route_name: string) {
         <SvgIcon style="font-size: 30px; cursor: pointer;" icon="solar:chat-dots-outline" @click="gotoRoute('Chat')" />
       </div>
       <div class="sidebar-x">
-        <SvgIcon style="font-size: 40px; cursor: pointer;" icon="skill-icons:mysql-dark" @click="gotoRoute('SQLChat')"/>
+        <SvgIcon style="font-size: 40px; cursor: pointer;" icon="skill-icons:mysql-dark" @click="message.error('暂未实现')" />
       </div>
     </div>
     <div style="position:fixed; bottom: 20px">

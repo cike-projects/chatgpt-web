@@ -4,7 +4,7 @@ import { NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
 import Advanced from './Advanced.vue'
 import Declaration from './Declaration.vue'
-import Billing from '@/components/common/Setting/Billing.vue'
+// import Billing from '@/components/common/Setting/Billing.vue'
 import Plugins from '@/components/common/Setting/Plugins.vue'
 import { useAuthStore } from '@/store'
 import { SvgIcon } from '@/components/common'
@@ -66,13 +66,13 @@ const show = computed({
           </template>
           <Plugins />
         </NTabPane>
-        <NTabPane name="Billing" tab="Billing">
-          <template #tab>
-            <SvgIcon class="text-lg" icon="material-symbols:money-outline" />
-            <span class="ml-2">{{ $t('setting.billing') }}</span>
-          </template>
-          <Billing />
-        </NTabPane>
+<!--        <NTabPane name="Billing" tab="Billing"> -->
+<!--          <template #tab> -->
+<!--            <SvgIcon class="text-lg" icon="material-symbols:money-outline" /> -->
+<!--            <span class="ml-2">{{ $t('setting.billing') }}</span> -->
+<!--          </template> -->
+<!--          <Billing /> -->
+<!--        </NTabPane> -->
         <NTabPane name="Declaration" tab="Declaration">
           <template #tab>
             <SvgIcon class="text-lg" icon="fa6-regular:hand-peace" />

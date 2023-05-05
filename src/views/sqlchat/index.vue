@@ -116,7 +116,6 @@ async function onConversation() {
           const xhr = event.target
           const { responseText } = xhr
           // Always process the final line
-          console.info(eventIndex, responseText.split('\n'))
           eventIndex++
           const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
           let chunk = responseText
