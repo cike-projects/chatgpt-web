@@ -1,9 +1,9 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, h, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { NAutoComplete, NButton, NInput, useDialog, useMessage } from 'naive-ui'
+import { NAutoComplete, NButton, NInput, NTag, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
@@ -422,6 +422,14 @@ const searchOptions = computed(() => {
       }
     })
   }
+  else if (prompt.value.startsWith('@')) {
+    return ['@image256x256 ', '@image512x512 ', '@image1024x1024 '].filter(it => it.startsWith(prompt.value)).map((suffix) => {
+      return {
+        label: suffix,
+        value: suffix,
+      }
+    })
+  }
   else {
     return []
   }
@@ -429,6 +437,9 @@ const searchOptions = computed(() => {
 
 // value反渲染key
 const renderOption = (option: { label: string }) => {
+  if (option.label.startsWith("@"))
+    return [option.label, ' ', h(NTag, { size: 'small', type: 'info' }, { default: () => 'Image' })]
+
   for (const i of promptTemplate.value) {
     if (i.value === option.label)
       return [i.key]

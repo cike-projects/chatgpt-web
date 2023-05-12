@@ -32,7 +32,7 @@ const gotoRoute = function (route_name: string) {
         <SvgIcon style="font-size: 40px; cursor: pointer;" icon="skill-icons:mysql-dark" @click="notification.warning({title:'duration: 10000', content: '暂未实现', duration: 10000})" />
       </div>
       <div class="sidebar-x">
-        <SvgIcon style="font-size: 40px; cursor: pointer;" icon="solar:code-bold-duotone" @click="notification.warning({title:'duration: 10000', content: '暂未实现', duration: 10000})" />
+        <SvgIcon style="font-size: 40px; cursor: pointer;" icon="solar:code-bold-duotone" @click="notification.warning({title:'代码功能', content: '暂未实现', duration: 10000})" />
       </div>
     </div>
     <div style="position:fixed; bottom: 20px">
