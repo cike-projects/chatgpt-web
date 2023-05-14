@@ -4,11 +4,11 @@ import { computed, ref, watch } from 'vue'
 import { NButton, NLayoutSider } from 'naive-ui'
 import List from './List.vue'
 import Footer from './Footer.vue'
-import { useAppStore, useChatStore } from '@/store'
+import { useAppStore, useSQLChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 
 const appStore = useAppStore()
-const chatStore = useChatStore()
+const chatStore = useSQLChatStore()
 
 const { isMobile } = useBasicLayout()
 const show = ref(false)
@@ -69,6 +69,8 @@ watch(
     @update-collapsed="handleUpdateCollapsed"
   >
     <div class="flex flex-col h-full" :style="mobileSafeArea">
+      <n-button>新建数据库</n-button>
+
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
           <NButton dashed block @click="handleAdd">

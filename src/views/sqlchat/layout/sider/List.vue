@@ -2,14 +2,14 @@
 import { computed } from 'vue'
 import { NInput, NPopconfirm, NScrollbar } from 'naive-ui'
 import { SvgIcon } from '@/components/common'
-import { useAppStore, useChatStore } from '@/store'
+import { useAppStore, useSQLChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { debounce } from '@/utils/functions/debounce'
 
 const { isMobile } = useBasicLayout()
 
 const appStore = useAppStore()
-const chatStore = useChatStore()
+const chatStore = useSQLChatStore()
 
 const dataSources = computed(() => chatStore.history)
 

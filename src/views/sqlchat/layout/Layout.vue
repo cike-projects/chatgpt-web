@@ -4,11 +4,11 @@ import {NLayout, NLayoutContent} from 'naive-ui'
 import {useRouter} from 'vue-router'
 import Sider from './sider/index.vue'
 import {useBasicLayout} from '@/hooks/useBasicLayout'
-import {useAppStore, useChatStore} from '@/store'
+import {useAppStore, useSQLChatStore} from '@/store'
 
 const router = useRouter()
 const appStore = useAppStore()
-const chatStore = useChatStore()
+const chatStore = useSQLChatStore()
 
 // router.replace({name: 'SQLChat', params: {uuid: chatStore.active}})
 

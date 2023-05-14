@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { setupPageGuard } from './permission'
 import { ChatLayout } from '@/views/chat/layout'
-import { ChatLayout as SQLChatLayout } from '@/views/sqlchat/layout'
+import { SQLChatLayout } from '@/views/sqlchat/layout'
 import MainLayout from '@/views/main/MainLayout.vue'
 import Login from '@/views/login/login.vue'
 
@@ -41,9 +41,14 @@ const routes: RouteRecordRaw[] = [
           meta: { requiresAuth: true },
         }],
       },
+      {
+        path: '/CodeHelper',
+        name: 'CodeHelper',
+        component: () => import('@/views/codehelper/index.vue'),
+        meta: { requiresAuth: true },
+      },
     ],
   },
-
   {
     path: '/404',
     name: '404',

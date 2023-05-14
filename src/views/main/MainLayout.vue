@@ -18,6 +18,8 @@ const getMobileClass = computed(() => {
 const show = ref(false)
 const router = useRouter()
 const gotoRoute = function (route_name: string) {
+  if (router.currentRoute.value.name === route_name)
+    return
   router.push({ name: route_name })
 }
 </script>
@@ -25,14 +27,14 @@ const gotoRoute = function (route_name: string) {
 <template>
   <div class="h-full p-2" style="display: inline-block; float: left; width: 64px; background-color: #eaeaf3; text-align: center">
     <div>
-      <div class="sidebar-x">
+      <div class="sidebar-x" :class="{ 'sidebar-active': router.currentRoute.value.name === 'Chat' }">
         <SvgIcon style="font-size: 30px; cursor: pointer;" icon="solar:chat-dots-outline" @click="gotoRoute('Chat')" />
       </div>
-      <div class="sidebar-x">
-        <SvgIcon style="font-size: 40px; cursor: pointer;" icon="skill-icons:mysql-dark" @click="notification.warning({title:'duration: 10000', content: '暂未实现', duration: 10000})" />
+      <div class="sidebar-x" :class="{ 'sidebar-active': router.currentRoute.value.name === 'SQLChat' }">
+        <SvgIcon style="font-size: 40px; cursor: pointer;" icon="skill-icons:mysql-dark" @click="gotoRoute('SQLChat')" />
       </div>
-      <div class="sidebar-x">
-        <SvgIcon style="font-size: 40px; cursor: pointer;" icon="solar:code-bold-duotone" @click="notification.warning({title:'代码功能', content: '暂未实现', duration: 10000})" />
+      <div class="sidebar-x" :class="{ 'sidebar-active': router.currentRoute.value.name === 'CodeHelper' }">
+        <SvgIcon style="font-size: 40px; cursor: pointer;" icon="solar:code-bold-duotone" @click="gotoRoute('CodeHelper')" />
       </div>
     </div>
     <div style="position:fixed; bottom: 20px">
@@ -60,5 +62,9 @@ const gotoRoute = function (route_name: string) {
   border-radius: 15px;
   margin-top: 10px;
   text-align: center;
+}
+
+.sidebar-active {
+  border: 1px solid #fecf57;
 }
 </style>

@@ -1,3 +1,3 @@
-import ChatLayout from './Layout.vue'
+import SQLChatLayout from './Layout.vue'
 
-export { ChatLayout }
+export { SQLChatLayout }
