@@ -32,16 +32,9 @@ export default defineConfig((env) => {
     },
     plugins: setupPlugins(viteEnv),
     server: {
-      host: '0.0.0.0',
+      host: true,
       port: 30816,
       open: false,
-      proxy: {
-        '/chatapi': {
-          target: viteEnv.VITE_APP_API_BASE_URL,
-          changeOrigin: true, // 允许跨域
-          // rewrite: path => path.replace('/chatapi/', '/'),
-        },
-      },
     },
     build: {
       reportCompressedSize: false,
