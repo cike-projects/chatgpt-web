@@ -1,8 +1,6 @@
 # ChatGPT Web
 
-> 声明：此项目只发布于 GitHub，基于 MIT 协议，免费且作为开源学习使用。并且不会有任何形式的卖号、付费服务、讨论群、讨论组等行为。谨防受骗。
-
-更多功能：[chatgpt-web-plus](https://github.com/Chanzhaoyu/chatgpt-web-plus)
+> 声明：此项目 Fork [Chanzhaoyu/chatgpt-web](https://github.com/Chanzhaoyu/chatgpt-web), 遵从原项目 MIT 协议，如有侵权，请及时告知。
 
 ![cover](./docs/c1.png)
 ![cover2](./docs/c2.png)
@@ -15,39 +13,27 @@
 		- [PNPM](#pnpm)
 		- [填写密钥](#填写密钥)
 	- [安装依赖](#安装依赖)
-		- [后端](#后端)
-		- [前端](#前端)
 	- [测试环境运行](#测试环境运行)
-		- [后端服务](#后端服务)
-		- [前端网页](#前端网页)
 	- [环境变量](#环境变量)
 	- [打包](#打包)
-		- [使用 Docker](#使用-docker)
-			- [Docker 参数示例](#docker-参数示例)
-			- [Docker build \& Run](#docker-build--run)
-			- [Docker compose](#docker-compose)
-			- [防止爬虫抓取](#防止爬虫抓取)
 		- [使用 Railway 部署](#使用-railway-部署)
 			- [Railway 环境变量](#railway-环境变量)
 		- [手动打包](#手动打包)
-			- [后端服务](#后端服务-1)
-			- [前端网页](#前端网页-1)
 	- [常见问题](#常见问题)
 	- [参与贡献](#参与贡献)
 	- [赞助](#赞助)
 	- [License](#license)
 ## 介绍
 
-支持双模型，提供了两种非官方 `ChatGPT API` 方法
+支持单模型，提供了官方 `OpenAI API` 方法
 
 | 方式                                          | 免费？ | 可靠性     | 质量 |
 | --------------------------------------------- | ------ | ---------- | ---- |
 | `ChatGPTAPI(gpt-3.5-turbo-0301)`                           | 否     | 可靠       | 相对较笨 |
-| `ChatGPTUnofficialProxyAPI(网页 accessToken)` | 是     | 相对不可靠 | 聪明 |
+
 
 对比：
 1. `ChatGPTAPI` 使用 `gpt-3.5-turbo` 通过 `OpenAI` 官方 `API` 调用 `ChatGPT`
-2. `ChatGPTUnofficialProxyAPI` 使用非官方代理服务器访问 `ChatGPT` 的后端`API`，绕过`Cloudflare`（依赖于第三方服务器，并且有速率限制）
 
 警告：
 1. 你应该首先使用 `API` 方式
@@ -56,38 +42,16 @@
 4. 使用 `accessToken` 时，不管你是国内还是国外的机器，都会使用代理。默认代理为 [pengzhile](https://github.com/pengzhile) 大佬的 `https://ai.fakeopen.com/api/conversation`，这不是后门也不是监听，除非你有能力自己翻过 `CF` 验证，用前请知悉。[社区代理](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)（注意：只有这两个是推荐，其他第三方来源，请自行甄别）
 5. 把项目发布到公共网络时，你应该设置 `AUTH_SECRET_KEY` 变量添加你的密码访问权限，你也应该修改 `index.html` 中的 `title`，防止被关键词搜索到。
 
-切换方式：
-1. 进入 `service/.env.example` 文件，复制内容到 `service/.env` 文件
-2. 使用 `OpenAI API Key` 请填写 `OPENAI_API_KEY` 字段 [(获取 apiKey)](https://platform.openai.com/overview)
-3. 使用 `Web API` 请填写 `OPENAI_ACCESS_TOKEN` 字段 [(获取 accessToken)](https://chat.openai.com/api/auth/session)
-4. 同时存在时以 `OpenAI API Key` 优先
-
-环境变量：
-
-全部参数变量请查看或[这里](#环境变量)
-
-```
-/service/.env.example
-```
-
 ## 待实现路线
-[✓] 双模型
+- [ ] 双模型
+- [x] 多会话储存和上下文逻辑
+- [x] 对代码等消息类型的格式化美化处理
+- [x] 访问权限控制
+- [x] 数据导入、导出
+- [x] 保存消息到本地图片
+- [x] 界面多语言
+- [x] 界面主题
 
-[✓] 多会话储存和上下文逻辑
-
-[✓] 对代码等消息类型的格式化美化处理
-
-[✓] 访问权限控制
-
-[✓] 数据导入、导出
-
-[✓] 保存消息到本地图片
-
-[✓] 界面多语言
-
-[✓] 界面主题
-
-[✗] More...
 
 ## 前置要求
 
@@ -105,47 +69,18 @@ node -v
 npm install pnpm -g
 ```
 
-### 填写密钥
-获取 `Openai Api Key` 或 `accessToken` 并填写本地环境变量 [跳转](#介绍)
 
-```
-# service/.env 文件
-
-# OpenAI API Key - https://platform.openai.com/overview
-OPENAI_API_KEY=
-
-# change this to an `accessToken` extracted from the ChatGPT site's `https://chat.openai.com/api/auth/session` response
-OPENAI_ACCESS_TOKEN=
-```
 
 ## 安装依赖
-
-> 为了简便 `后端开发人员` 的了解负担，所以并没有采用前端 `workspace` 模式，而是分文件夹存放。如果只需要前端页面做二次开发，删除 `service` 文件夹即可。
-
-### 后端
-
-进入文件夹 `/service` 运行以下命令
+根目录下运行以下命令
 
 ```shell
 pnpm install
 ```
 
-### 前端
-根目录下运行以下命令
-```shell
-pnpm bootstrap
-```
 
 ## 测试环境运行
-### 后端服务
 
-进入文件夹 `/service` 运行以下命令
-
-```shell
-pnpm start
-```
-
-### 前端网页
 根目录下运行以下命令
 ```shell
 pnpm dev
@@ -175,68 +110,6 @@ pnpm dev
 - `HTTPS_PROXY` 支持 `http`，`https`, `socks5`，可选
 - `ALL_PROXY` 支持 `http`，`https`, `socks5`，可选
 
-## 打包
-
-### 使用 Docker
-
-#### Docker 参数示例
-
-![docker](./docs/docker.png)
-
-#### Docker build & Run
-
-```bash
-docker build -t chatgpt-web .
-
-# 前台运行
-docker run --name chatgpt-web --rm -it -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
-
-# 后台运行
-docker run --name chatgpt-web -d -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
-
-# 运行地址
-http://localhost:3002/
-```
-
-#### Docker compose
-
-[Hub 地址](https://hub.docker.com/repository/docker/chenzhaoyu94/chatgpt-web/general)
-
-```yml
-version: '3'
-
-services:
-  app:
-    image: chenzhaoyu94/chatgpt-web # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
-    ports:
-      - 127.0.0.1:3002:3002
-    environment:
-      # 二选一
-      OPENAI_API_KEY: sk-xxx
-      # 二选一
-      OPENAI_ACCESS_TOKEN: xxx
-      # API接口地址，可选，设置 OPENAI_API_KEY 时可用
-      OPENAI_API_BASE_URL: xxx
-      # API模型，可选，设置 OPENAI_API_KEY 时可用，https://platform.openai.com/docs/models
-      # gpt-4, gpt-4-0314, gpt-4-32k, gpt-4-32k-0314, gpt-3.5-turbo, gpt-3.5-turbo-0301, text-davinci-003, text-davinci-002, code-davinci-002
-      OPENAI_API_MODEL: xxx
-      # 反向代理，可选
-      API_REVERSE_PROXY: xxx
-      # 访问权限密钥，可选
-      AUTH_SECRET_KEY: xxx
-      # 每小时最大请求次数，可选，默认无限
-      MAX_REQUEST_PER_HOUR: 0
-      # 超时，单位毫秒，可选
-      TIMEOUT_MS: 60000
-      # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
-      SOCKS_PROXY_HOST: xxx
-      # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
-      SOCKS_PROXY_PORT: xxx
-      # HTTPS 代理，可选，支持 http，https，socks5
-      HTTPS_PROXY: http://xxx:7890
-```
-- `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
-- `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
 
 #### 防止爬虫抓取
 
@@ -279,27 +152,9 @@ services:
 > 注意: `Railway` 修改环境变量会重新 `Deploy`
 
 ### 手动打包
-#### 后端服务
-> 如果你不需要本项目的 `node` 接口，可以省略如下操作
 
-复制 `service` 文件夹到你有 `node` 服务环境的服务器上。
 
-```shell
-# 安装
-pnpm install
-
-# 打包
-pnpm build
-
-# 运行
-pnpm prod
-```
-
-PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
-
-#### 前端网页
-
-1、修改根目录下 `.env` 文件中的 `VITE_GLOB_API_URL` 为你的实际后端接口地址
+1、修改根目录下 `.env` 文件中的 `VITE_APP_API_ALL_BASE_URL` 为你的实际后端接口地址
 
 2、根目录下运行以下命令，然后将 `dist` 文件夹内的文件复制到你网站服务的根目录下
 
@@ -310,21 +165,6 @@ pnpm build
 ```
 
 ## 常见问题
-Q: 为什么 `Git` 提交总是报错？
-
-A: 因为有提交信息验证，请遵循 [Commit 指南](./CONTRIBUTING.md)
-
-Q: 如果只使用前端页面，在哪里改请求接口？
-
-A: 根目录下 `.env` 文件中的 `VITE_GLOB_API_URL` 字段。
-
-Q: 文件保存时全部爆红?
-
-A: `vscode` 请安装项目推荐插件，或手动安装 `Eslint` 插件。
-
-Q: 前端没有打字机效果？
-
-A: 一种可能原因是经过 Nginx 反向代理，开启了 buffer，则 Nginx 会尝试从后端缓冲一定大小的数据再发送给浏览器。请尝试在反代参数后添加 `proxy_buffering off;`，然后重载 Nginx。其他 web server 配置同理。
 
 ## 参与贡献
 
