@@ -1,20 +1,20 @@
 <script setup lang='ts'>
-import type { Ref } from 'vue'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { storeToRefs } from 'pinia'
-import { NAutoComplete, NButton, NInput, useDialog, useMessage } from 'naive-ui'
+import type {Ref} from 'vue'
+import {computed, onMounted, onUnmounted, ref} from 'vue'
+import {useRoute} from 'vue-router'
+import {storeToRefs} from 'pinia'
+import {NAutoComplete, NButton, NInput, useDialog, useMessage} from 'naive-ui'
 import html2canvas from 'html2canvas'
-import { Message } from './components'
-import { useScroll } from './hooks/useScroll'
-import { useChat } from './hooks/useChat'
-import { useUsingContext } from './hooks/useUsingContext'
+import {Message} from './components'
+import {useScroll} from './hooks/useScroll'
+import {useChat} from './hooks/useChat'
+import {useUsingContext} from './hooks/useUsingContext'
 import HeaderComponent from './components/Header/index.vue'
-import { HoverButton, SvgIcon } from '@/components/common'
-import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useChatStore, usePromptStore } from '@/store'
-import { fetchChatAPIProcess } from '@/api'
-import { t } from '@/locales'
+import {HoverButton, SvgIcon} from '@/components/common'
+import {useBasicLayout} from '@/hooks/useBasicLayout'
+import {useChatStore, usePromptStore} from '@/store'
+import {fetchChatAPIProcess} from '@/api'
+import {t} from '@/locales'
 
 let controller = new AbortController()
 
@@ -26,12 +26,12 @@ const ms = useMessage()
 
 const chatStore = useChatStore()
 
-const { isMobile } = useBasicLayout()
-const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
-const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
-const { usingContext, toggleUsingContext } = useUsingContext()
+const {isMobile} = useBasicLayout()
+const {addChat, updateChat, updateChatSome, getChatByUuidAndIndex} = useChat()
+const {scrollRef, scrollToBottom, scrollToBottomIfAtBottom} = useScroll()
+const {usingContext, toggleUsingContext} = useUsingContext()
 
-const { uuid } = route.params as { uuid: string }
+const {uuid} = route.params as { uuid: string }
 const roomId = uuid
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
@@ -44,12 +44,12 @@ const inputRef = ref<Ref | null>(null)
 const promptStore = usePromptStore()
 
 // 使用storeToRefs，保证store修改后，联想部分能够重新渲染
-const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
+const {promptList: promptTemplate} = storeToRefs<any>(promptStore)
 
 // 未知原因刷新页面，loading 状态不会重置，手动重置
 dataSources.value.forEach((item, index) => {
   if (item.loading)
-    updateChatSome(+uuid, index, { loading: false })
+    updateChatSome(+uuid, index, {loading: false})
 })
 
 function handleSubmit() {
@@ -75,7 +75,7 @@ async function onConversation() {
       inversion: true,
       error: false,
       conversationOptions: null,
-      requestOptions: { prompt: message, options: null },
+      requestOptions: {prompt: message, options: null},
     },
   )
   scrollToBottom()
@@ -87,7 +87,7 @@ async function onConversation() {
   const lastContext = conversationList.value[conversationList.value.length - 1]?.conversationOptions
 
   if (lastContext && usingContext.value)
-    options = { ...lastContext }
+    options = {...lastContext}
 
   addChat(
     +uuid,
@@ -98,7 +98,7 @@ async function onConversation() {
       inversion: false,
       error: false,
       conversationOptions: null,
-      requestOptions: { prompt: message, options: { ...options } },
+      requestOptions: {prompt: message, options: {...options}},
     },
   )
   scrollToBottom()
@@ -109,12 +109,12 @@ async function onConversation() {
       let eventIndex = 0
       await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
-        roomId,
+        conversationId: roomId,
         options,
         signal: controller.signal,
-        onDownloadProgress: ({ event }) => {
+        onDownloadProgress: ({event}) => {
           const xhr = event.target
-          const { responseText } = xhr
+          const {responseText} = xhr
           // Always process the final line
           eventIndex++
           const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
@@ -132,8 +132,8 @@ async function onConversation() {
                 inversion: false,
                 error: false,
                 loading: true,
-                conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-                requestOptions: { prompt: message, options: { ...options } },
+                conversationOptions: {conversationId: data.conversationId, parentMessageId: data.id},
+                requestOptions: {prompt: message, options: {...options}},
               },
             )
 
@@ -145,18 +145,16 @@ async function onConversation() {
             }
 
             scrollToBottomIfAtBottom()
-          }
-          catch (error) {
+          } catch (error) {
             //
           }
         },
       })
-      updateChatSome(+uuid, dataSources.value.length - 1, { loading: false })
+      updateChatSome(+uuid, dataSources.value.length - 1, {loading: false})
     }
 
     await fetchChatAPIOnce()
-  }
-  catch (error: any) {
+  } catch (error: any) {
     const errorMessage = error?.message ?? t('common.wrong')
 
     if (error.message === 'canceled') {
@@ -196,12 +194,11 @@ async function onConversation() {
         error: true,
         loading: false,
         conversationOptions: null,
-        requestOptions: { prompt: message, options: { ...options } },
+        requestOptions: {prompt: message, options: {...options}},
       },
     )
     scrollToBottomIfAtBottom()
-  }
-  finally {
+  } finally {
     loading.value = false
   }
 }
@@ -212,14 +209,14 @@ async function onRegenerate(index: number) {
 
   controller = new AbortController()
 
-  const { requestOptions } = dataSources.value[index]
+  const {requestOptions} = dataSources.value[index]
 
   let message = requestOptions?.prompt ?? ''
 
   let options: Chat.ConversationRequest = {}
 
   if (requestOptions.options)
-    options = { ...requestOptions.options }
+    options = {...requestOptions.options}
 
   loading.value = true
 
@@ -233,7 +230,7 @@ async function onRegenerate(index: number) {
       error: false,
       loading: true,
       conversationOptions: null,
-      requestOptions: { prompt: message, options: { ...options } },
+      requestOptions: {prompt: message, options: {...options}},
     },
   )
 
@@ -242,12 +239,12 @@ async function onRegenerate(index: number) {
     const fetchChatAPIOnce = async () => {
       await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
-        roomId,
+        conversationId: roomId,
         options,
         signal: controller.signal,
-        onDownloadProgress: ({ event }) => {
+        onDownloadProgress: ({event}) => {
           const xhr = event.target
-          const { responseText } = xhr
+          const {responseText} = xhr
           // Always process the final line
           const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
           let chunk = responseText
@@ -264,8 +261,8 @@ async function onRegenerate(index: number) {
                 inversion: false,
                 error: false,
                 loading: true,
-                conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-                requestOptions: { prompt: message, options: { ...options } },
+                conversationOptions: {conversationId: data.conversationId, parentMessageId: data.id},
+                requestOptions: {prompt: message, options: {...options}},
               },
             )
 
@@ -275,17 +272,15 @@ async function onRegenerate(index: number) {
               message = ''
               return fetchChatAPIOnce()
             }
-          }
-          catch (error) {
+          } catch (error) {
             //
           }
         },
       })
-      updateChatSome(+uuid, index, { loading: false })
+      updateChatSome(+uuid, index, {loading: false})
     }
     await fetchChatAPIOnce()
-  }
-  catch (error: any) {
+  } catch (error: any) {
     if (error.message === 'canceled') {
       updateChatSome(
         +uuid,
@@ -309,11 +304,10 @@ async function onRegenerate(index: number) {
         error: true,
         loading: false,
         conversationOptions: null,
-        requestOptions: { prompt: message, options: { ...options } },
+        requestOptions: {prompt: message, options: {...options}},
       },
     )
-  }
-  finally {
+  } finally {
     loading.value = false
   }
 }
@@ -349,11 +343,9 @@ function handleExport() {
         d.loading = false
         ms.success(t('chat.exportSuccess'))
         Promise.resolve()
-      }
-      catch (error: any) {
+      } catch (error: any) {
         ms.error(t('chat.exportFailed'))
-      }
-      finally {
+      } finally {
         d.loading = false
       }
     },
@@ -396,8 +388,7 @@ function handleEnter(event: KeyboardEvent) {
       event.preventDefault()
       handleSubmit()
     }
-  }
-  else {
+  } else {
     if (event.key === 'Enter' && event.ctrlKey) {
       event.preventDefault()
       handleSubmit()
@@ -417,14 +408,15 @@ function handleStop() {
 // 理想状态下其实应该是key作为索引项,但官方的renderOption会出现问题，所以就需要value反renderLabel实现
 const searchOptions = computed(() => {
   if (prompt.value.startsWith('/')) {
-    return promptTemplate.value.filter((item: { key: string }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
+    return promptTemplate.value.filter((item: {
+      key: string
+    }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
       return {
         label: obj.value,
         value: obj.value,
       }
     })
-  }
-  else {
+  } else {
     return []
   }
 })
@@ -484,7 +476,7 @@ onUnmounted(() => {
         >
           <template v-if="!dataSources.length">
             <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
-              <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
+              <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl"/>
               <span>Aha~</span>
             </div>
           </template>
@@ -504,7 +496,7 @@ onUnmounted(() => {
               <div class="sticky bottom-0 left-0 flex justify-center">
                 <NButton v-if="loading" type="warning" @click="handleStop">
                   <template #icon>
-                    <SvgIcon icon="ri:stop-circle-line" />
+                    <SvgIcon icon="ri:stop-circle-line"/>
                   </template>
                   Stop Responding
                 </NButton>
@@ -519,17 +511,17 @@ onUnmounted(() => {
         <div class="flex items-center justify-between space-x-2">
           <HoverButton @click="handleClear">
             <span class="text-xl text-[#4f555e] dark:text-white">
-              <SvgIcon icon="ri:delete-bin-line" />
+              <SvgIcon icon="ri:delete-bin-line"/>
             </span>
           </HoverButton>
           <HoverButton v-if="!isMobile" @click="handleExport">
             <span class="text-xl text-[#4f555e] dark:text-white">
-              <SvgIcon icon="ri:download-2-line" />
+              <SvgIcon icon="ri:download-2-line"/>
             </span>
           </HoverButton>
           <HoverButton v-if="!isMobile" @click="toggleUsingContext">
             <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
-              <SvgIcon icon="ri:chat-history-line" />
+              <SvgIcon icon="ri:chat-history-line"/>
             </span>
           </HoverButton>
           <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
@@ -550,7 +542,7 @@ onUnmounted(() => {
           <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
             <template #icon>
               <span class="dark:text-black">
-                <SvgIcon icon="ri:send-plane-fill" />
+                <SvgIcon icon="ri:send-plane-fill"/>
               </span>
             </template>
           </NButton>

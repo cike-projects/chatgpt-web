@@ -108,7 +108,7 @@ async function onConversation() {
     const fetchChatAPIOnce = async () => {
       await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
-        roomId,
+          conversationId: roomId,
         options,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
@@ -240,7 +240,7 @@ async function onRegenerate(index: number) {
     const fetchChatAPIOnce = async () => {
       await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
-        roomId,
+        conversationId: roomId,
         options,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
