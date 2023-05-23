@@ -1,6 +1,6 @@
 {
-  "name": "chatgpt-web",
-  "version": "2.11.0",
+  "name": "chattyai-web",
+  "version": "2.10.9",
   "private": false,
   "description": "ChatGPT Web",
   "author": "ChenZhaoYu <chenzhaoyu1994@gmail.com>",
@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "dev": "vite",
+    "prod": "vite --mode producation",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",

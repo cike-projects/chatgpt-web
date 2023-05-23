@@ -108,7 +108,7 @@ async function onConversation() {
     const fetchChatAPIOnce = async () => {
       await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
-          conversationId: roomId,
+        conversationId: roomId,
         options,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
@@ -548,7 +548,7 @@ onUnmounted(() => {
                 v-model:value="prompt"
                 type="textarea"
                 :placeholder="placeholder"
-                :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
+                :autosize="{ minRows: isMobile ? 1 : 2, maxRows: isMobile ? 4 : 8 }"
                 @input="handleInput"
                 @focus="handleFocus"
                 @blur="handleBlur"

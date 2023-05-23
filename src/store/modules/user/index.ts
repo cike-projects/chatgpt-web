@@ -7,7 +7,7 @@ import { checkToken } from '@/api'
 interface CurrentUserInfo {
   nickname: string
   avatar: string
-  description: string | null
+  username: string
 }
 
 export const useUserStore = defineStore('user-store', {
@@ -19,7 +19,7 @@ export const useUserStore = defineStore('user-store', {
         this.userInfo = {
           avatar: data.avatar,
           nickname: data.nickname,
-          description: data.description ?? '',
+          username: data.username,
         }
         return Promise.resolve(data)
       }

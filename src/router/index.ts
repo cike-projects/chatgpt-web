@@ -3,9 +3,9 @@ import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { setupPageGuard } from './permission'
 import { ChatLayout } from '@/views/chat/layout'
-import { SQLChatLayout } from '@/views/sqlchat/layout'
 import MainLayout from '@/views/main/MainLayout.vue'
 import Login from '@/views/login/login.vue'
+
 
 const routes: RouteRecordRaw[] = [
   {
@@ -31,20 +31,15 @@ const routes: RouteRecordRaw[] = [
         }],
       },
       {
-        path: '/SQLChatLayout',
-        name: 'SQLChatLayout',
-        component: SQLChatLayout,
-        children: [{
-          path: '/sql-chat/:uuid?',
-          name: 'SQLChat',
-          component: () => import('@/views/sqlchat/index.vue'),
-          meta: { requiresAuth: true },
-        }],
+        path: '/settings',
+        name: 'Settings',
+        component: () => import('@/views/settings/index.vue'),
+        meta: { requiresAuth: true },
       },
       {
-        path: '/CodeHelper',
-        name: 'CodeHelper',
-        component: () => import('@/views/codehelper/index.vue'),
+        path: '/user',
+        name: 'User',
+        component: () => import('@/views/user/index.vue'),
         meta: { requiresAuth: true },
       },
     ],
@@ -60,7 +55,6 @@ const routes: RouteRecordRaw[] = [
     name: '500',
     component: () => import('@/views/exception/500/index.vue'),
   },
-
   {
     path: '/:pathMatch(.*)*',
     name: 'notFound',

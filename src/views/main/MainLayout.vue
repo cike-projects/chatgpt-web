@@ -30,20 +30,14 @@ const gotoRoute = function (route_name: string) {
       <div class="sidebar-x" :class="{ 'sidebar-active': router.currentRoute.value.name === 'Chat' }">
         <SvgIcon style="font-size: 30px; cursor: pointer;" icon="solar:chat-dots-outline" @click="gotoRoute('Chat')" />
       </div>
-      <div class="sidebar-x" :class="{ 'sidebar-active': router.currentRoute.value.name === 'SQLChat' }">
-        <SvgIcon style="font-size: 40px; cursor: pointer;" icon="skill-icons:mysql-dark" @click="gotoRoute('SQLChat')" />
-      </div>
-      <div class="sidebar-x" :class="{ 'sidebar-active': router.currentRoute.value.name === 'CodeHelper' }">
-        <SvgIcon style="font-size: 40px; cursor: pointer;" icon="solar:code-bold-duotone" @click="gotoRoute('CodeHelper')" />
-      </div>
     </div>
     <div style="position:fixed; bottom: 20px">
-      <SimpleUserAvatar />
+      <SimpleUserAvatar @click="gotoRoute('User')" />
       <div style="height: 10px" />
-      <HoverButton @click="show = true">
-      <span class="text-xl text-[#4f555e] dark:text-white">
-        <SvgIcon icon="ri:settings-4-line" />
-      </span>
+      <HoverButton @click="gotoRoute('Settings')">
+        <span class="text-xl text-[#4f555e] dark:text-white">
+          <SvgIcon icon="ri:settings-4-line" />
+        </span>
       </HoverButton>
       <Setting v-if="show" v-model:visible="show" />
     </div>
