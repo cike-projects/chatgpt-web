@@ -64,8 +64,9 @@ watch(
     :width="260"
     :show-trigger="isMobile ? false : 'arrow-circle'"
     collapse-mode="transform"
-    position="absolute"
+    position="static"
     bordered
+    class="h-full"
     :style="getMobileClass"
     @update-collapsed="handleUpdateCollapsed"
   >
