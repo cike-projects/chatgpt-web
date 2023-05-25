@@ -1,7 +1,7 @@
 <script lang="ts">
-import {defineComponent, ref} from 'vue'
-import type {FormInst, FormItemInst, FormItemRule, FormRules} from 'naive-ui';
-import {useMessage,} from 'naive-ui'
+import { defineComponent, ref } from 'vue'
+import type { FormInst, FormItemInst, FormItemRule, FormRules } from 'naive-ui'
+import { useMessage } from 'naive-ui'
 
 interface ModelType {
   oldPassword: string | null
@@ -73,7 +73,7 @@ export default defineComponent({
       rules,
       handlePasswordInput() {
         if (modelRef.value.reenteredPassword) {
-          rPasswordFormItemRef.value?.validate({trigger: 'password-input'})
+          rPasswordFormItemRef.value?.validate({ trigger: 'password-input' })
         }
       },
       handleValidateButtonClick(e: MouseEvent) {
@@ -96,13 +96,15 @@ export default defineComponent({
   <div class="p-4 space-y-5 min-h-[200px]">
     <div class="space-y-6">
       <div class="max-w-[460px]">
-        <n-form ref="formRef" :model="model" :rules="rules" label-width="100px" label-placement="left">
+        <n-form ref="formRef" :model="model" :rules="rules" label-width="100px" label-placement="left"
+                autocomplete="off">
           <n-form-item path="oldPassword" label="旧密码">
-            <n-input v-model:value="model.oldPassword" @keydown.enter.prevent/>
+            <n-input v-model:value="model.oldPassword" autocomplete="off" @keydown.enter.prevent />
           </n-form-item>
           <n-form-item path="newPassword" label="新密码">
             <n-input
               v-model:value="model.newPassword"
+              autocomplete="off"
               type="password"
               @input="handlePasswordInput"
               @keydown.enter.prevent

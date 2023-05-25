@@ -7,12 +7,14 @@ import Footer from './Footer.vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { PromptStore } from '@/components/common'
+import Announcement from '@/components/common/Announcement.vue'
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
 
 const { isMobile } = useBasicLayout()
 const show = ref(false)
+const showAnnouncement = ref(false)
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
@@ -81,9 +83,14 @@ watch(
           <List />
         </div>
         <div class="p-4">
-          <NButton block @click="show = true">
-            {{ $t('store.siderButton') }}
-          </NButton>
+          <NSpace vertical>
+            <NButton block @click="showAnnouncement = true">
+              公告栏
+            </NButton>
+            <NButton block @click="show = true">
+              {{ $t('store.siderButton') }}
+            </NButton>
+          </NSpace>
         </div>
       </main>
       <Footer />
@@ -93,4 +100,5 @@ watch(
     <div v-show="!collapsed" class="fixed inset-0 z-40 w-full h-full bg-black/40" @click="handleUpdateCollapsed" />
   </template>
   <PromptStore v-model:visible="show" />
+  <Announcement v-model:visible="showAnnouncement" />
 </template>

@@ -1,10 +1,12 @@
 <script setup lang='ts'>
-import {computed, ref} from 'vue'
-import {useBasicLayout} from '@/hooks/useBasicLayout'
-import {HoverButton, Setting, SimpleUserAvatar, SvgIcon} from '@/components/common'
-import {useRouter} from "vue-router";
-import {NLayout, useMessage, useNotification} from "naive-ui";
-import {useAppStore, useChatStore} from "@/store";
+import { computed, ref } from 'vue'
+import { NLayout, useMessage, useNotification } from "naive-ui";
+import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { useRouter } from "vue-router";
+import { SvgIcon } from '@/components/common'
+import { useAppStore, useChatStore } from "@/store";
+import SimpleUserAvatar from "@/components/common/SimpleUserAvatar.vue";
+import SettingButton from "@/components/common/SettingButton.vue";
 
 const message = useMessage()
 const notification = useNotification()
@@ -12,7 +14,7 @@ const notification = useNotification()
 const appStore = useAppStore()
 const chatStore = useChatStore()
 
-const {isMobile} = useBasicLayout()
+const { isMobile } = useBasicLayout()
 const collapsed = computed(() => appStore.siderCollapsed)
 
 const show = ref(false)
@@ -20,39 +22,34 @@ const router = useRouter()
 const gotoRoute = function (route_name: string) {
   if (router.currentRoute.value.name === route_name)
     return
-  router.push({name: route_name})
+  router.push({ name: route_name })
 }
 
+const chatColor = computed(() => router.currentRoute.value.name === 'Chat' ? '#99dcbd' : '#ffffff')
 </script>
 
 <template>
   <div class="flex h-full flex-col overflow-hidden">
-    <NLayout class="h-full flex-1" content-style="display: flex; flex-flow: row nowrap; width: 100%;">
-      <NLayoutSider
-        class="h-full align-center"
-        :width="72"
-        position="static"
-        bordered
-      >
-        <div>
-          <div class="sidebar-x" :class="{ 'sidebar-active': router.currentRoute.value.name === 'Chat' }">
-            <SvgIcon style="font-size: 30px; cursor: pointer;" icon="solar:chat-dots-outline"
-                     @click="gotoRoute('Chat')"/>
+    <NLayout class="h-full flex-1" content-style="display: flex; flex-flow: row nowrap; width: 100%;" :has-sider="false">
+      <NLayoutSider :width="72" position="static">
+        <div class="flex h-full select-none flex-col items-center justify-between px-2 py-4 bg-[#e8eaf1] dark:bg-[#25272d]">
+          <div class="flex flex-col space-y-4">
+            <a class="h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c]">
+              <div class="flex h-full">
+                <div class="m-auto text-center" @click="gotoRoute('Chat')">
+                  <SvgIcon icon="ri:message-3-line" class="inline-block text-2xl text-black dark:text-white" :color="chatColor" />
+                </div>
+              </div>
+            </a>
           </div>
-        </div>
-        <div style="position:fixed; bottom: 20px">
-          <SimpleUserAvatar @click="gotoRoute('User')"/>
-          <div style="height: 10px"/>
-          <HoverButton @click="gotoRoute('Settings')">
-            <span class="text-xl text-[#4f555e] dark:text-white">
-              <SvgIcon icon="ri:settings-4-line"/>
-            </span>
-          </HoverButton>
-          <Setting v-if="show" v-model:visible="show"/>
+          <div class="flex flex-col items-center space-y-4">
+            <SimpleUserAvatar @click="gotoRoute('User')" />
+            <SettingButton @click="gotoRoute('Settings')" />
+          </div>
         </div>
       </NLayoutSider>
       <NLayoutContent class="h-full" position="static">
-        <RouterView/>
+        <RouterView />
       </NLayoutContent>
     </NLayout>
   </div>

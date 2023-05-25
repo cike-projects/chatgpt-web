@@ -494,7 +494,60 @@ onUnmounted(() => {
           <template v-if="!dataSources.length">
             <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
               <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
-              <span>Aha~</span>
+              <span>ChattyAI~</span>
+            </div>
+            <div>
+              <NGrid x-gap="12" :cols="3">
+                <NGi>
+                  <NSpace vertical>
+                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                      搜索神器
+                    </div>
+                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                      自学神器
+                    </div>
+                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                      以文生文
+                    </div>
+                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                      超级导购
+                    </div>
+                  </NSpace>
+                </NGi>
+                <NGi>
+                  <NSpace vertical>
+                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                      搜索神器
+                    </div>
+                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                      自学神器
+                    </div>
+                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                      以文生文
+                    </div>
+                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                      超级导购
+                    </div>
+                  </NSpace>
+                </NGi>
+                <NGi>
+                  <NSpace vertical>
+                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                      搜索神器
+                    </div>
+                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                      自学神器
+                    </div>
+                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                      以文生文
+                    </div>
+                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                      超级导购
+                    </div>
+                  </NSpace>
+                </NGi>
+              </NGrid>
+
             </div>
           </template>
           <template v-else>

@@ -52,13 +52,12 @@ function clearData(): void {
 </script>
 
 <template>
-  <div class="p-4 space-y-5 min-h-[200px]">
-    <div class="space-y-6">
+  <div class="p-8 space-y-5 min-h-[200px]">
+    <div class="space-y-6 max-w-[460px]">
       <NH1>设置</NH1>
       <n-form>
         <n-form-item label="主题">
           <NSelect
-            style="width: 140px"
             :value="theme"
             :options="themeOptions"
             @update-value="value => appStore.setTheme(value)"
@@ -66,7 +65,6 @@ function clearData(): void {
         </n-form-item>
         <n-form-item label="显示语言">
           <NSelect
-            style="width: 140px"
             :value="language"
             :options="languageOptions"
             @update-value="value => appStore.setLanguage(value)"

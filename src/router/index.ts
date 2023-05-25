@@ -6,7 +6,6 @@ import { ChatLayout } from '@/views/chat/layout'
 import MainLayout from '@/views/main/MainLayout.vue'
 import Login from '@/views/login/login.vue'
 
-
 const routes: RouteRecordRaw[] = [
   {
     path: '/login',

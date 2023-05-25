@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import {onMounted, ref} from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import {NSpin} from 'naive-ui'
 import {fetchBillingUsage} from '@/api'
 
@@ -10,6 +10,32 @@ interface BillingUsage {
 const loading = ref(false)
 
 const config = ref<BillingUsage>()
+const data = ref([])
+const page = ref(1)
+const totalPage = ref(1)
+
+const columns = reactive([
+  {
+    title: '编号',
+    key: 'name',
+  },
+  {
+    title: 'Token',
+    key: 'age',
+  },
+  {
+    title: '时间',
+    key: 'address',
+  },
+  {
+    title: '类型',
+    key: 'address',
+  },
+  {
+    title: '备注',
+    key: 'address',
+  },
+])
 
 async function fetchConfig() {
   try {
@@ -56,30 +82,10 @@ onMounted(() => {
             </n-grid>
           </n-card>
           <n-card title="记录" size="small">
-            <n-table :single-line="false" size="small">
-              <thead>
-              <tr>
-                <th>编号</th>
-                <th>Token</th>
-                <th>时间</th>
-                <th>备注</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>放弃</td>
-                <td>反常的</td>
-                <td>彻底废除</td>
-                <td>...</td>
-              </tr>
-              <tr>
-                <td>...</td>
-                <td>...</td>
-                <td>...</td>
-                <td>...</td>
-              </tr>
-              </tbody>
-            </n-table>
+            <n-space vertical>
+              <n-data-table :columns="columns" :data="data" />
+              <n-pagination v-model:page="page" v-model:page-count="totalPage" />
+            </n-space>
           </n-card>
         </div>
       </div>

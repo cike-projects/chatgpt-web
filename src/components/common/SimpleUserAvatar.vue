@@ -11,11 +11,11 @@ const userInfo = computed(() => userStore.userInfo)
 </script>
 
 <template>
-  <div class="flex items-center overflow-hidden">
-    <div class="w-10 h-10 overflow-hidden rounded-full shrink-0">
+  <div class="flex items-center justify-center overflow-hidden">
+    <div class="w-9 h-9 overflow-hidden rounded-full shrink-0 cursor-pointer">
       <template v-if="isString(userInfo.avatar) && userInfo.avatar.length > 0">
         <NAvatar
-          size="large"
+          :size="36"
           round
           :src="userInfo.avatar"
           :fallback-src="defaultAvatar"

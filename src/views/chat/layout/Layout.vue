@@ -26,7 +26,7 @@ const getContainerClass = computed(() => {
 
 <template>
   <NLayout class="z-40 transition" :class="getContainerClass" has-sider>
-    <Sider/>
+    <Sider />
     <NLayoutContent class="h-full">
       <RouterView v-slot="{ Component, route }">
         <component :is="Component" :key="route.fullPath"/>
