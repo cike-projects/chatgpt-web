@@ -1,23 +1,19 @@
 <script setup lang='ts'>
-import { computed, ref } from 'vue'
-import { NLayout, useMessage, useNotification } from "naive-ui";
+import { computed } from 'vue'
+import { NLayout, useMessage } from 'naive-ui'
+import { useRouter } from 'vue-router'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useRouter } from "vue-router";
 import { SvgIcon } from '@/components/common'
-import { useAppStore, useChatStore } from "@/store";
-import SimpleUserAvatar from "@/components/common/SimpleUserAvatar.vue";
-import SettingButton from "@/components/common/SettingButton.vue";
+import { useAppStore } from '@/store'
+import SimpleUserAvatar from '@/components/common/SimpleUserAvatar.vue'
+import SettingButton from '@/components/common/SettingButton.vue'
 
 const message = useMessage()
-const notification = useNotification()
 
 const appStore = useAppStore()
-const chatStore = useChatStore()
-
 const { isMobile } = useBasicLayout()
 const collapsed = computed(() => appStore.siderCollapsed)
 
-const show = ref(false)
 const router = useRouter()
 const gotoRoute = function (route_name: string) {
   if (router.currentRoute.value.name === route_name)
@@ -25,7 +21,12 @@ const gotoRoute = function (route_name: string) {
   router.push({ name: route_name })
 }
 
-const chatColor = computed(() => router.currentRoute.value.name === 'Chat' ? '#99dcbd' : '#ffffff')
+const chatColor = computed(() => {
+  if (router.currentRoute.value.name === 'Chat')
+    return ['text-[#4b9e5f]', 'dark:text-[#86dfba]']
+  else
+    return ['text-black', 'dark:text-white']
+})
 </script>
 
 <template>
@@ -37,7 +38,7 @@ const chatColor = computed(() => router.currentRoute.value.name === 'Chat' ? '#9
             <a class="h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c]">
               <div class="flex h-full">
                 <div class="m-auto text-center" @click="gotoRoute('Chat')">
-                  <SvgIcon icon="ri:message-3-line" class="inline-block text-2xl text-black dark:text-white" :color="chatColor" />
+                  <SvgIcon icon="ri:message-3-line" class="inline-block text-2xl" :class="chatColor" />
                 </div>
               </div>
             </a>
@@ -56,15 +57,4 @@ const chatColor = computed(() => router.currentRoute.value.name === 'Chat' ? '#9
 </template>
 
 <style scoped>
-.sidebar-x {
-  padding: 2px;
-  background-color: #ffffff;
-  border-radius: 15px;
-  margin-top: 10px;
-  text-align: center;
-}
-
-.sidebar-active {
-  border: 1px solid #fecf57;
-}
 </style>

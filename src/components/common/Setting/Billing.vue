@@ -1,54 +1,93 @@
 <script setup lang='ts'>
-import { onMounted, reactive, ref } from 'vue'
-import {NSpin} from 'naive-ui'
-import {fetchBillingUsage} from '@/api'
+import { h, onMounted, reactive, ref } from 'vue'
+import { NSpin, NTag } from 'naive-ui'
+import { fetchMemberWallet, fetchMemberWalletRecord } from '@/api'
 
-interface BillingUsage {
-  totalUsage?: number
+interface WalletRecordInfo {
+  token?: number
+}
+
+interface PageRecord {
+  currentPage: number
+  totalPage: number
+  dataList: WalletRecordInfo[]
 }
 
 const loading = ref(false)
 
-const config = ref<BillingUsage>()
-const data = ref([])
+const walletInfo = ref<Settings.WalletInfo>({
+  totalValue: 0,
+  availableValue: 0,
+})
+const walletRecords = ref<WalletRecordInfo[]>([])
 const page = ref(1)
 const totalPage = ref(1)
 
 const columns = reactive([
   {
     title: '编号',
-    key: 'name',
+    key: 'sid',
   },
   {
     title: 'Token',
-    key: 'age',
+    key: 'token',
+    render(row) {
+      return h(
+        NTag,
+        {
+          style: {
+            marginRight: '6px',
+          },
+          type: row.token > 0 ? 'info' : 'error',
+          bordered: false,
+        },
+        {
+          default: () => row.token,
+        },
+      )
+    },
   },
   {
     title: '时间',
-    key: 'address',
-  },
-  {
-    title: '类型',
-    key: 'address',
+    key: 'createTime',
   },
   {
     title: '备注',
-    key: 'address',
+    key: 'remark',
   },
 ])
 
-async function fetchConfig() {
+async function fetchWalletInfo() {
   try {
     loading.value = true
-    const {data} = await fetchBillingUsage<BillingUsage>()
-    config.value = data
+    const { data } = await fetchMemberWallet<Settings.WalletInfo>()
+    walletInfo.value = data
+  }
+  finally {
+    loading.value = false
+  }
+}
+
+async function fetchWalletRecord() {
+  try {
+    loading.value = true
+    const { data } = await fetchMemberWalletRecord<PageRecord>(page.value, 10)
+    page.value = data.currentPage
+    totalPage.value = data.totalPage
+    walletRecords.value = data.dataList
   } finally {
     loading.value = false
   }
 }
 
+function pageChange(pageIndex: number) {
+  page.value = pageIndex
+  fetchWalletRecord()
+}
+
 onMounted(() => {
-  // fetchConfig()
+  fetchWalletInfo()
+  fetchWalletRecord()
 })
 </script>
 
@@ -62,29 +101,27 @@ onMounted(() => {
               <n-gi>
                 会员状态：
                 <n-tag type="info">
-                  哪里都是你
+                  正常
                 </n-tag>
-                <div class="light-green"/>
               </n-gi>
               <n-gi>
                 总 Token：
                 <n-tag type="info">
-                  哪里都是你
+                  {{ walletInfo.totalValue }}
                 </n-tag>
-                <div class="green"/>
               </n-gi>
               <n-gi>
                 剩余 Token：
                 <n-tag type="info">
-                  哪里都是你
+                  {{ walletInfo.availableValue }}
                 </n-tag>
               </n-gi>
             </n-grid>
           </n-card>
           <n-card title="记录" size="small">
             <n-space vertical>
-              <n-data-table :columns="columns" :data="data" />
-              <n-pagination v-model:page="page" v-model:page-count="totalPage" />
+              <n-data-table :columns="columns" :data="walletRecords" />
+              <n-pagination v-model:page="page" v-model:page-count="totalPage" :on-update:page="pageChange" />
             </n-space>
           </n-card>
         </div>

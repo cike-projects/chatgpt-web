@@ -1,7 +1,8 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import type { FormInst, FormItemInst, FormItemRule, FormRules } from 'naive-ui'
 import { useMessage } from 'naive-ui'
+import { memberModifyPwd } from '@/api'
 
 interface ModelType {
   oldPassword: string | null
@@ -19,7 +20,6 @@ export default defineComponent({
       newPassword: '',
       reenteredPassword: '',
     })
-
     function validatePasswordStartWith(
       rule: FormItemRule,
       value: string,
@@ -80,7 +80,14 @@ export default defineComponent({
         e.preventDefault()
         formRef.value?.validate((errors) => {
           if (!errors) {
-            message.success('验证成功')
+            memberModifyPwd(modelRef.value.oldPassword, modelRef.value.newPassword).then(() => {
+              message.success('修改成功')
+              modelRef.value.newPassword = ''
+              modelRef.value.oldPassword = ''
+              modelRef.value.reenteredPassword = ''
+            }).catch((error) => {
+              message.error(error.message)
+            })
           } else {
             console.log(errors)
             message.error('验证失败')
@@ -123,20 +130,15 @@ export default defineComponent({
               @keydown.enter.prevent
             />
           </n-form-item>
-          <n-row :gutter="[0, 24]">
-            <n-col :span="24">
-              <div style="display: flex; justify-content: flex-end">
-                <n-button
-                  :disabled="model.oldPassword === null"
-                  round
-                  type="primary"
-                  @click="handleValidateButtonClick"
-                >
-                  验证
-                </n-button>
-              </div>
-            </n-col>
-          </n-row>
+          <n-form-item label=" ">
+            <n-button
+              :disabled="model.oldPassword === null"
+              type="primary"
+              @click="handleValidateButtonClick"
+            >
+              更新密码
+            </n-button>
+          </n-form-item>
         </n-form>
       </div>
     </div>

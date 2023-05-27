@@ -29,6 +29,7 @@ export const useAuthStore = defineStore('auth-store', {
 
     logout() {
       this.token = undefined
+      this.isLoggedIn = false
       removeToken()
     },
 

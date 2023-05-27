@@ -33,7 +33,7 @@ function handleValidateButtonClick() {
   authLogin(modelRef.value.username, modelRef.value.password).then((response) => {
     // 登录成功
     authStore.loginSuccess(response.data)
-    router.push({name: 'Chat'})
+    router.push({ name: 'Chat' })
   }).catch((error) => {
     message.error(error.message)
   })

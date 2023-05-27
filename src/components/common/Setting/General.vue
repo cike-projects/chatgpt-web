@@ -1,38 +1,55 @@
 <script lang="ts" setup>
-import {computed, ref} from 'vue'
-import {NInput, useMessage} from 'naive-ui'
-import {useAppStore, useUserStore} from '@/store'
-import type {UserInfo} from '@/store/modules/user/helper'
-import {useBasicLayout} from '@/hooks/useBasicLayout'
-import {t} from '@/locales'
+import { onMounted, ref } from 'vue'
+import { NInput, useMessage } from 'naive-ui'
+import { useRouter } from 'vue-router'
+import { useAuthStoreWithout, useUserStore } from '@/store'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { fetchMemberInfo, modifyMemberInfo } from '@/api'
 
-const appStore = useAppStore()
 const userStore = useUserStore()
+const message = useMessage()
+const authStore = useAuthStoreWithout()
+const router = useRouter()
 
-const {isMobile} = useBasicLayout()
+const memberInfo = ref<Settings.MemberInfo>({})
 
-const ms = useMessage()
+const { isMobile } = useBasicLayout()
 
-const userInfo = computed(() => userStore.userInfo)
-
-const avatar = ref(userInfo.value.avatar ?? '')
-const nickname = ref(userInfo.value.nickname ?? '')
-const username = ref(userInfo.value.username ?? '')
-
-function updateUserInfo(options: Partial<UserInfo>) {
-  userStore.updateUserInfo(options)
-  ms.success(t('common.success'))
+const logout = function () {
+  authStore.logout()
+  router.push({ name: 'Login' })
 }
+
+const modifyAvatarAndNickname = function () {
+  if (!memberInfo.value.avatar || !memberInfo.value.nickname) {
+    message.error('头像或者昵称不能为空')
+  } else {
+    modifyMemberInfo(memberInfo.value.avatar, memberInfo.value.nickname).then(() => {
+      // 登录成功
+      message.success('修改成功')
+      userStore.updateUserInfo({
+        avatar: memberInfo.value.avatar,
+        nickname: memberInfo.value.nickname,
+      })
+    }).catch((error) => {
+      message.error(error.message)
+    })
+  }
+}
+
+async function getMemberInfo() {
+  const { data } = await fetchMemberInfo<Settings.MemberInfo>()
+  memberInfo.value = data
+}
+
+onMounted(() => {
+  getMemberInfo()
+})
 </script>
 
 <template>
   <div class="p-4 space-y-5 min-h-[200px]">
     <div class="space-y-6">
-      <n-avatar
-        round
-        :size="64"
-        :src="avatar"
-      />
       <n-form
         ref="formRef"
         label-placement="left"
@@ -40,21 +57,28 @@ function updateUserInfo(options: Partial<UserInfo>) {
         require-mark-placement="right-hanging"
         :style="{ maxWidth: '640px' }"
       >
+        <NFormItem label=" ">
+          <n-avatar
+            round
+            :size="64"
+            :src="memberInfo.avatar"
+          />
+        </NFormItem>
         <n-form-item label="头像" path="inputValue">
-          <NInput v-model:value="avatar" placeholder=""/>
+          <NInput v-model:value="memberInfo.avatar" placeholder="" />
         </n-form-item>
         <n-form-item label="昵称" path="inputValue" required>
-          <NInput v-model:value="nickname" placeholder=""/>
+          <NInput v-model:value="memberInfo.nickname" placeholder="" />
         </n-form-item>
         <n-form-item label="账号" path="inputValue" required>
-          <NInput v-model:value="username" placeholder="" disabled/>
+          <NInput :value="memberInfo.username" placeholder="" disabled />
         </n-form-item>
         <n-form-item label=" ">
           <n-space>
-            <n-button type="primary" size="medium">
+            <n-button type="primary" @click="modifyAvatarAndNickname">
               更新信息
             </n-button>
-            <n-button type="warning">
+            <n-button type="warning" @click="logout">
               退出登录
             </n-button>
           </n-space>

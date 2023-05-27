@@ -5,10 +5,12 @@ import General from './General.vue'
 import ModifyPassword from './ModifyPassword.vue'
 import Billing from './Billing.vue'
 import Meal from './Meal.vue'
-import InvitationCode from "./InvitationCode.vue"
+import InvitationCode from './InvitationCode.vue'
 import { SvgIcon } from '@/components/common'
+import { useRouter } from 'vue-router'
 
-const active = ref('General')
+const router = useRouter()
+const active = ref(router.currentRoute.value.query.id ?? 'General')
 </script>
 
 <template>

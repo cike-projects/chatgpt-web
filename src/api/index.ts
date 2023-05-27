@@ -2,9 +2,55 @@ import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import { get, post } from '@/utils/request'
 import { useAuthStore, useSettingStore } from '@/store'
 
-export function fetchBillingUsage<T>() {
+export function fetchMemberInfo<T = any>() {
   return get<T>({
-    url: '/dashboard/billing/usage',
+    url: '/member/info',
+  })
+}
+
+export function modifyMemberInfo<T = any>(avatar: string, nickname: string) {
+  return post<T>({
+    url: '/member/info',
+    data: {
+      avatar,
+      nickname,
+    },
+  })
+}
+
+export function fetchMemberInvitation<T = any>(currentPage: number, pageSize: number) {
+  return get<T>({
+    url: '/member/invitationRecord',
+    data: {
+      currentPage,
+      pageSize,
+    },
+  })
+}
+
+export function fetchMemberWallet<T = any>() {
+  return get<T>({
+    url: '/member/wallet',
+  })
+}
+
+export function fetchMemberWalletRecord<T = any>(currentPage: number, pageSize: number) {
+  return get<T>({
+    url: '/member/wallet/record',
+    data: {
+      currentPage,
+      pageSize,
+    },
+  })
+}
+
+export function memberModifyPwd<T = any>(oldPassword: string, newPassword: string) {
+  return post<T>({
+    url: '/member/modifyPwd',
+    data: {
+      newPassword,
+      oldPassword,
+    },
   })
 }
 

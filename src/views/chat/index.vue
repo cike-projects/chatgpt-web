@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { computed, h, onMounted, onUnmounted, ref } from 'vue'
+import { computed, h, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { NAutoComplete, NButton, NInput, NTag, useDialog, useMessage } from 'naive-ui'
@@ -437,7 +437,7 @@ const searchOptions = computed(() => {
 
 // value反渲染key
 const renderOption = (option: { label: string }) => {
-  if (option.label.startsWith("@"))
+  if (option.label.startsWith('@'))
     return [option.label, ' ', h(NTag, { size: 'small', type: 'info' }, { default: () => 'Image' })]
 
   for (const i of promptTemplate.value) {
@@ -464,6 +464,10 @@ const footerClass = computed(() => {
   return classes
 })
 
+const fillInput = function (suggest: string) {
+  prompt.value = suggest
+}
+
 onMounted(() => {
   scrollToBottom()
   if (inputRef.value && !isMobile.value)
@@ -474,6 +478,76 @@ onUnmounted(() => {
   if (loading.value)
     controller.abort()
 })
+
+const promptSuggests = reactive([
+  {
+    title: '妙用（示例）',
+    icon: 'ri:lightbulb-flash-line',
+    data: [
+      {
+        name: '搜索神器',
+        prompt: '我几个有一本书讲述一个二维空间的世界，好像居民都是几个图形。主人公是个正方形。有一天，一个来自名叫空间的三维球体跑来拜访这个正方形。平面国的居民眼看这个球体可以随意变化大小（进出平面），吓得目瞪口呆。这是哪本书？给我具体的介绍，并推荐几本类似的。',
+      },
+      {
+        name: '自学神器',
+        prompt: '作为一个纯小白，我想自学python，但是我完全不知道从哪学起，请告诉我第一步应该怎么做，比如怎么安装环境，要注意什么，然后给我写一个最简单的python程序，备注出每一句的意思，让我明白。',
+      },
+      {
+        name: '以文生文',
+        prompt: '曲曲折折的荷塘上面，弥望的是田田的叶子。 叶子出水很高，像亭亭的舞女的裙。 层层的叶子中间，零星地点缀着些白花，有袅娜地开着的，有羞涩地打着朵儿的；正如一粒粒的明珠，又如碧天里的星星，又如刚出浴的美人。 微风过处，送来缕缕清香，仿佛远处高楼上渺茫的歌声似的。 这时候叶子与花也有一丝的颤动，像闪电般，霎时传过荷塘的那边去了。 叶子本是肩并肩密密地挨着，这便宛然有了一道凝碧的波痕。 叶子底下是脉脉的流水，遮住了，不能见一些颜色；而叶子却更见风致了。 以上来自朱自清的散文《荷塘月色》，仿照文章的感觉，再写一篇，关于竹子的',
+      },
+      {
+        name: '超级导购',
+        prompt: '我想买一款相机，平时旅游用，价格在8000-12000左右，有什么推荐的吗',
+      },
+    ],
+  },
+  {
+    title: '职场（示例）',
+    icon: 'ri:ai-generate',
+    data: [
+      {
+        name: '万能助理',
+        prompt: '我想去澳大利亚旅游，时间是下个月底，大概晚一星期，先去凯恩斯呆三天，再去悉尼呆四天。但是我是第一次出国，流程完全不清楚，请给我详细的步骤说明和建议，包括签证，机票，酒店，申请资料和必要的建议。',
+      },
+      {
+
+        name: '职场写作',
+        prompt: '写一个会议通知，内容是关于AIGC的，邀请了行业专家周鹏教授，讲解AI时代的内容创作，时间6月25号，地点会议中心301，强调会议的重要性。尤其突出周鹏教授的经历，比如具体的专家或者取得的成就，凸显会议的价值。',
+      },
+      {
+        name: '超级程序员',
+        prompt: '用python写一个石头剪刀布的小游戏，代码要尽量高效，节省资源，另外测试好bug，让我直接可以用。',
+      },
+      {
+        name: '闪电大纲',
+        prompt: '我要写一个PPT大纲，标题是：新生儿的产后护理 请把大纲提供给我，以markdown格式输出',
+      },
+    ],
+  },
+  {
+    title: '学习（示例）',
+    icon: 'ri:book-mark-line',
+    data: [
+      {
+        name: '作文辅导',
+        prompt: '你现在是一个优秀的语文老师，尤其擅长小学生作文，这是我孩子写的作文，有哪些可以提升的点，让作文更精彩，多给我几个方案和思路，说清楚修改的理由及好处，并改好给我： 初冬的一个中午，小红的爷爷坐在院子里一棵大树古旁边编箩筐，旁边一只母鸡带着一群小鸡在寻找食物。这时，小红蹦蹦跳跳的放学回来了，手里拿着一张成绩通知书。爷爷问他为什么这么高兴，他走到爷爷跟前说了句悄悄话：“爷爷，成绩通知书下来了，我得了满分。”爷爷听了高兴地笑了。',
+      },
+      {
+        name: '数学家教',
+        prompt: '你现在是一个优秀的数理化老师，我孩子上小学，这道题做错了。原题是：8和10的最大公因数和最小公倍数分别是多少，我孩子回答的是1和80，正确的答案是2和40。请先分析出他为什么答错，再给出正确的解题思路，越简单越好',
+      },
+      {
+        name: '单词神器',
+        prompt: '以下几组单词我特别容易混淆，请按照音标、中文翻译、英文释义、词根词源、助记和例句的形式，做到一个表格给我。 quite quiet affect effect adapt adopt adept',
+      },
+      {
+        name: '超级公式',
+        prompt: '打印相对论公式',
+      },
+    ],
+  },
+])
 </script>
 
 <template>
@@ -496,58 +570,22 @@ onUnmounted(() => {
               <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
               <span>ChattyAI~</span>
             </div>
-            <div>
+            <div style="margin-top: 20px">
               <NGrid x-gap="12" :cols="3">
-                <NGi>
+                <NGi v-for="promptSuggest in promptSuggests">
                   <NSpace vertical>
-                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                      搜索神器
-                    </div>
-                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                      自学神器
-                    </div>
-                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                      以文生文
-                    </div>
-                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                      超级导购
-                    </div>
-                  </NSpace>
-                </NGi>
-                <NGi>
-                  <NSpace vertical>
-                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                      搜索神器
-                    </div>
-                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                      自学神器
-                    </div>
-                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                      以文生文
-                    </div>
-                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                      超级导购
-                    </div>
-                  </NSpace>
-                </NGi>
-                <NGi>
-                  <NSpace vertical>
-                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                      搜索神器
-                    </div>
-                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                      自学神器
-                    </div>
-                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                      以文生文
-                    </div>
-                    <div title="搜索神器" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                      超级导购
+                    <h2 class="text-md text-center">
+                      <SvgIcon :icon="promptSuggest.icon" class="mb-2 inline-block text-lg text-black dark:text-white" />
+                      <p>
+                        {{ promptSuggest.title }}
+                      </p>
+                    </h2>
+                    <div v-for="suggest in promptSuggest.data" :title="suggest.name" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800" @click="fillInput(suggest.prompt)">
+                      {{ suggest.name }}
                     </div>
                   </NSpace>
                 </NGi>
               </NGrid>
-
             </div>
           </template>
           <template v-else>

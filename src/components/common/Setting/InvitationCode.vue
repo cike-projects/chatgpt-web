@@ -1,7 +1,9 @@
 <script setup lang='ts'>
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { NSpin, useMessage } from 'naive-ui'
 import { copyToClip } from '@/utils/copy'
+
+import { fetchMemberInfo, fetchMemberInvitation } from '@/api'
 
 const message = useMessage()
 const loading = ref(false)
@@ -9,18 +11,59 @@ const data = ref([])
 const page = ref(1)
 const totalPage = ref(1)
 
+interface InvitationMemberInfo {
+  nickname: string
+  username: string
+  invitationDate: string
+}
+interface PageRecord {
+  currentPage: number
+  totalPage: number
+  dataList: InvitationMemberInfo[]
+}
+
+const invitationMemberInfos = ref<InvitationMemberInfo[]>([])
+const memberInfo = ref<Settings.MemberInfo>({})
+
+async function getMemberInfo() {
+  const { data } = await fetchMemberInfo<Settings.MemberInfo>()
+  memberInfo.value = data
+}
+
+async function fetchInvitationRecord() {
+  try {
+    loading.value = true
+    const { data } = await fetchMemberInvitation<PageRecord>(page.value, 10)
+    page.value = data.currentPage
+    totalPage.value = data.totalPage
+    invitationMemberInfos.value = data.dataList
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  getMemberInfo()
+  fetchInvitationRecord()
+})
+
+function pageChange(pageIndex: number) {
+  page.value = pageIndex
+  fetchInvitationRecord()
+}
+
 const columns = reactive([
   {
     title: '名称',
-    key: 'name',
+    key: 'nickname',
   },
   {
     title: '账号',
-    key: 'age',
+    key: 'username',
   },
   {
     title: '时间',
-    key: 'address',
+    key: 'invitationDate',
   },
 ])
 
@@ -44,7 +87,7 @@ const copyCode = function () {
           </n-card>
           <n-card title="邀请码" size="small">
             <n-space>
-              <NH2>G8AZGXCWG</NH2>
+              <NH2>{{ memberInfo.invitationCode }}</NH2>
               <NButton ghost @click="copyCode">
                 复制邀请链接
               </NButton>
@@ -52,8 +95,8 @@ const copyCode = function () {
           </n-card>
           <n-card title="邀请记录" size="small">
             <n-space vertical>
-              <n-data-table :columns="columns" :data="data" />
-              <n-pagination v-model:page="page" v-model:page-count="totalPage" />
+              <n-data-table :columns="columns" :data="invitationMemberInfos" />
+              <n-pagination v-model:page="page" v-model:page-count="totalPage" :on-update:page="pageChange" />
             </n-space>
           </n-card>
         </div>
