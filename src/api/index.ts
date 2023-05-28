@@ -99,6 +99,18 @@ export function authLogin<T>(username: string, password: string) {
   })
 }
 
+export function authSignup<T>(username: string, password: string, email: string, invitationCode?: string | null) {
+  return post<T>({
+    url: 'auth/signup',
+    data: {
+      username,
+      password,
+      email,
+      invitationCode,
+    },
+  })
+}
+
 export function checkToken<T>() {
   return get<T>({
     url: 'auth/checkToken',

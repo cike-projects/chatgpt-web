@@ -5,11 +5,13 @@ import { useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import { useAuthStoreWithout } from '@/store/modules/auth'
 
-import { authLogin } from '@/api'
+import { authLogin, authSignup } from '@/api'
 
 interface ModelType {
   username: string | null
   password: string | null
+  email: string | null
+  invitationCode?: string | null
 }
 
 const authStore = useAuthStoreWithout()
@@ -19,7 +21,34 @@ window.$message = message
 const modelRef = ref<ModelType>({
   username: null,
   password: null,
+  email: null,
 })
+
+const isLogin = ref(true)
+const emailFormat = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/
+function handleValidateSignup() {
+  if (!modelRef.value.username) {
+    message.error('请输入用户名')
+    return
+  }
+  if (!modelRef.value.password) {
+    message.error('请输入密码')
+    return
+  }
+
+  if (!modelRef.value.email || !emailFormat.test(modelRef.value.email)) {
+    message.error('请输入正确的邮箱，邮箱将用来做账号激活操作')
+    return
+  }
+  authSignup(modelRef.value.username, modelRef.value.password, modelRef.value.email, modelRef.value.invitationCode).then((response) => {
+    // 登录成功
+    authStore.loginSuccess(response.data)
+    message.success('注册成功，欢迎使用👏')
+    router.push({ name: 'Chat' })
+  }).catch((error) => {
+    message.error(error.message)
+  })
+}
 
 function handleValidateButtonClick() {
   if (!modelRef.value.username) {
@@ -33,6 +62,7 @@ function handleValidateButtonClick() {
   authLogin(modelRef.value.username, modelRef.value.password).then((response) => {
     // 登录成功
     authStore.loginSuccess(response.data)
+    message.success('登录成功，正在跳转')
     router.push({ name: 'Chat' })
   }).catch((error) => {
     message.error(error.message)
@@ -45,38 +75,40 @@ function handleValidateButtonClick() {
     <!-- login/register container -->
     <div class="container">
       <!-- register -->
-      <div class="form-container sign-up-container">
+      <div v-show="!isLogin" class="form-container sign-up-container">
         <div class="form">
           <h2>sign up</h2>
-          <input type="text" placeholder="Username...">
-          <input type="email" placeholder="Email...">
-          <input type="password" placeholder="Password...">
-          <button class="signUp">sign up</button>
+          <input v-model="modelRef.username" type="text" placeholder="用户名...">
+          <input v-model="modelRef.email" type="email" placeholder="邮箱...">
+          <input v-model="modelRef.password" type="password" placeholder="密码...">
+          <input v-model="modelRef.invitationCode" type="text" placeholder="邀请码...">
+          <span class="forget-password">当前项目处于内测阶段，测试结束后会根据具体的情况处理数据</span>
+          <button class="signUp" @click="handleValidateSignup"> 注 册 </button>
         </div>
       </div>
       <!-- login -->
-      <div class="form-container sign-in-container">
+      <div v-show="isLogin" class="form-container sign-in-container">
         <div class="form">
           <h2>sign in</h2>
-          <input v-model="modelRef.username" type="text" placeholder="Username...">
-          <input v-model="modelRef.password" type="password" placeholder="Password...">
-          <button class="signIn" @click="handleValidateButtonClick">sign in</button>
+          <input v-model="modelRef.username" type="text" placeholder="用户名...">
+          <input v-model="modelRef.password" type="password" placeholder="密码...">
+          <button class="signIn" @click="handleValidateButtonClick"> 登 录 </button>
         </div>
       </div>
       <!-- overlay container -->
       <div class="overlay_container">
         <div class="overlay">
           <!-- overlay left -->
-          <div class="overlay_panel overlay_left_container">
+          <div v-show="!isLogin" class="overlay_panel overlay_right_container">
             <h2>welcome back!</h2>
             <p>To keep connected with us please login with your personal info</p>
-            <button id="sign-in">sign in</button>
+            <button id="sign-in" @click="isLogin = true">sign in</button>
           </div>
           <!-- overlay right -->
-          <div class="overlay_panel overlay_right_container">
+          <div v-show="isLogin" class="overlay_panel overlay_right_container">
             <h2>hello friend!</h2>
             <p>Enter your personal details and start journey with us</p>
-            <button id="sign-up">sign up</button>
+            <button id="sign-up" @click="isLogin = false">sign up</button>
           </div>
         </div>
       </div>
@@ -212,14 +244,6 @@ button:active {
   right: 0;
 }
 
-.container.active .sign-up-container {
-  transform: translateX(100%);
-  z-index: 5;
-}
-
-.container.active .sign-in-container {
-  transform: translateX(100%);
-}
 
 .container.active .overlay_container {
   transform: translateX(-100%);
