@@ -3,6 +3,8 @@ import type { PluginOption } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
+import { visualizer } from 'rollup-plugin-visualizer'
+import importToCDN, { autoComplete } from 'vite-plugin-cdn-import'
 
 function setupPlugins(env: ImportMetaEnv): PluginOption[] {
   return [
@@ -17,6 +19,18 @@ function setupPlugins(env: ImportMetaEnv): PluginOption[] {
           { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
         ],
       },
+    }),
+    visualizer(),
+    importToCDN({
+      modules: [
+        autoComplete('vue'),
+        autoComplete('axios'),
+        {
+          name: 'naive-ui',
+          var: 'naive-ui',
+          path: 'https://unpkg.com/naive-ui@2.34.3/dist/index.js',
+        },
+      ],
     }),
   ]
 }
