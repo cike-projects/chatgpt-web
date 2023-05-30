@@ -24,10 +24,15 @@ function setupPlugins(env: ImportMetaEnv): PluginOption[] {
     importToCDN({
       modules: [
         autoComplete('vue'),
+        {
+          name: 'vue-demi',
+          var: 'VueDemi',
+          path: 'https://cdn.bootcdn.net/ajax/libs/vue-demi/0.14.0/index.iife.min.js',
+        },
         autoComplete('axios'),
         {
           name: 'naive-ui',
-          var: 'naive-ui',
+          var: 'naive',
           path: 'https://unpkg.com/naive-ui@2.34.3/dist/index.js',
         },
       ],

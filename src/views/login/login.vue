@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
-import { useMessage } from 'naive-ui'
+import { NButton, NSpace, useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import { useAuthStoreWithout } from '@/store/modules/auth'
 
 import { authLogin, authSignup } from '@/api'
-
+import { useBasicLayout } from '@/hooks/useBasicLayout'
+const { isMobile } = useBasicLayout()
 interface ModelType {
   username: string | null
   password: string | null
@@ -27,12 +28,12 @@ const modelRef = ref<ModelType>({
 const isLogin = ref(true)
 const emailFormat = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/
 function handleValidateSignup() {
-  if (!modelRef.value.username) {
-    message.error('请输入用户名')
+  if (!modelRef.value.username || modelRef.value.username.length < 8 || modelRef.value.username.length > 16) {
+    message.error('请输入用户名, 且长度在 8 - 16 位')
     return
   }
-  if (!modelRef.value.password) {
-    message.error('请输入密码')
+  if (!modelRef.value.password || modelRef.value.username.length < 9 || modelRef.value.username.length > 16) {
+    message.error('请输入密码, 且长度在 9 - 16 位')
     return
   }
 
@@ -68,6 +69,13 @@ function handleValidateButtonClick() {
     message.error(error.message)
   })
 }
+
+const chatColor = computed(() => {
+  if (isMobile.value)
+    return ['w-100p']
+  else
+    return []
+})
 </script>
 
 <template>
@@ -75,7 +83,7 @@ function handleValidateButtonClick() {
     <!-- login/register container -->
     <div class="container">
       <!-- register -->
-      <div v-show="!isLogin" class="form-container sign-up-container">
+      <div v-show="!isLogin" class="form-container sign-up-container" :class="chatColor">
         <div class="form">
           <h2>sign up</h2>
           <input v-model="modelRef.username" type="text" placeholder="用户名...">
@@ -83,32 +91,38 @@ function handleValidateButtonClick() {
           <input v-model="modelRef.password" type="password" placeholder="密码...">
           <input v-model="modelRef.invitationCode" type="text" placeholder="邀请码...">
           <span class="forget-password">当前项目处于内测阶段，测试结束后会根据具体的情况处理数据</span>
-          <button class="signUp" @click="handleValidateSignup"> 注 册 </button>
+          <NSpace vertical justify="center">
+            <button class="lb" @click="handleValidateSignup"> 注 册 </button>
+            <NButton v-if="isMobile" quaternary class="text-black dark:text-black" @click="isLogin = true"> 有账号 去登录 </NButton>
+          </NSpace>
         </div>
       </div>
       <!-- login -->
-      <div v-show="isLogin" class="form-container sign-in-container">
+      <div v-show="isLogin" class="form-container sign-in-container" :class="chatColor">
         <div class="form">
-          <h2>sign in</h2>
+          <h2>欢 迎 回 来</h2>
           <input v-model="modelRef.username" type="text" placeholder="用户名...">
           <input v-model="modelRef.password" type="password" placeholder="密码...">
-          <button class="signIn" @click="handleValidateButtonClick"> 登 录 </button>
+          <NSpace vertical justify="center">
+            <button class="lb" @click="handleValidateButtonClick"> 登 录 </button>
+            <NButton v-if="isMobile" quaternary class="text-black dark:text-black" @click="isLogin = false"> 无账号 去注册</NButton>
+          </NSpace>
         </div>
       </div>
       <!-- overlay container -->
-      <div class="overlay_container">
+      <div v-if="!isMobile" class="overlay_container">
         <div class="overlay">
           <!-- overlay left -->
           <div v-show="!isLogin" class="overlay_panel overlay_right_container">
             <h2>welcome back!</h2>
             <p>To keep connected with us please login with your personal info</p>
-            <button id="sign-in" @click="isLogin = true">sign in</button>
+            <button class="lb" @click="isLogin = true">sign in</button>
           </div>
           <!-- overlay right -->
           <div v-show="isLogin" class="overlay_panel overlay_right_container">
             <h2>hello friend!</h2>
             <p>Enter your personal details and start journey with us</p>
-            <button id="sign-up" @click="isLogin = false">sign up</button>
+            <button class="lb" @click="isLogin = false">sign up</button>
           </div>
         </div>
       </div>
@@ -133,12 +147,17 @@ h2 {
 
 .container {
   position: relative;
-  width: 768px;
+  width: 90%;
+  max-width: 768px;
   height: 480px;
   background-color: white;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   overflow: hidden;
+}
+
+.w-100p {
+  width: 100%!important;
 }
 
 .form-container {
@@ -182,7 +201,7 @@ input {
   border-bottom: 2px solid #ff4b2b;
 }
 
-button {
+.lb {
   background: #ff4b2b;
   padding: 10px 50px;
   border: 1px solid transparent;

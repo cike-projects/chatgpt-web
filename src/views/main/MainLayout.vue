@@ -32,7 +32,7 @@ const chatColor = computed(() => {
 <template>
   <div class="flex h-full flex-col overflow-hidden">
     <NLayout class="h-full flex-1" content-style="display: flex; flex-flow: row nowrap; width: 100%;" :has-sider="false">
-      <NLayoutSider :width="72" position="static">
+      <NLayoutSider v-if="!isMobile" :width="72" position="static">
         <div class="flex h-full select-none flex-col items-center justify-between px-2 py-4 bg-[#e8eaf1] dark:bg-[#25272d]">
           <div class="flex flex-col space-y-4">
             <a class="h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c]">
