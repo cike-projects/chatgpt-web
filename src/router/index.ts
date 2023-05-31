@@ -36,6 +36,12 @@ const routes: RouteRecordRaw[] = [
         meta: { requiresAuth: true },
       },
       {
+        path: '/botSettings',
+        name: 'BotSettings',
+        component: () => import('@/views/bot-settings/index.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
         path: '/user',
         name: 'User',
         component: () => import('@/views/user/index.vue'),

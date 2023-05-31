@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { CSSProperties } from 'vue'
-import { computed, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { NButton, NLayoutSider } from 'naive-ui'
 import List from './List.vue'
 import Footer from './Footer.vue'
@@ -17,6 +17,22 @@ const show = ref(false)
 const showAnnouncement = ref(false)
 
 const collapsed = computed(() => appStore.siderCollapsed)
+
+const options = reactive([
+  {
+    label: '使用下面的机器人创建会话',
+    key: 'default',
+    disabled: true,
+  },
+  {
+    label: '暴躁老哥',
+    key: '暴躁老哥',
+  },
+  {
+    label: 'Code 助手',
+    key: 'Code 助手',
+  },
+])
 
 function handleAdd() {
   chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
@@ -75,9 +91,14 @@ watch(
     <div class="flex flex-col h-full" :style="mobileSafeArea">
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
-          <NButton dashed block @click="handleAdd">
-            {{ $t('chat.newChatButton') }}
-          </NButton>
+          <NSpace justify="space-between">
+            <NButton dashed block @click="handleAdd">
+              {{ $t('chat.newChatButton') }}
+            </NButton>
+            <n-dropdown :options="options">
+              <n-button class="dark:bg-green-600">+</n-button>
+            </n-dropdown>
+          </NSpace>
         </div>
         <div class="flex-1 min-h-0 pb-4 overflow-hidden">
           <List />

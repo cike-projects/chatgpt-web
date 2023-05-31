@@ -37,13 +37,16 @@ const chatColor = function (module: string) {
         <div
           class="flex h-full select-none flex-col items-center justify-between px-2 py-4 bg-[#e8eaf1] dark:bg-[#25272d]">
           <div class="flex flex-col space-y-4">
-            <a class="h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c]">
-              <div class="flex h-full">
-                <div class="m-auto text-center" @click="gotoRoute('Chat')">
-                  <SvgIcon icon="ri:message-3-line" class="inline-block text-2xl" :class="chatColor('Chat')" />
-                </div>
+            <div class="flex h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c]">
+              <div class="m-auto text-center" @click="gotoRoute('Chat')">
+                <SvgIcon icon="ri:message-3-line" class="inline-block text-2xl" :class="chatColor('Chat')" />
               </div>
-            </a>
+            </div>
+            <div class="flex h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c]">
+              <div class="m-auto text-center" @click="gotoRoute('BotSettings')">
+                <SvgIcon icon="charm:robot" class="inline-block text-2xl" :class="chatColor('BotSettings')" />
+              </div>
+            </div>
           </div>
           <div class="flex flex-col items-center space-y-4">
             <SimpleUserAvatar @click="gotoRoute('User')" />
