@@ -23,7 +23,11 @@ function setupPlugins(env: ImportMetaEnv): PluginOption[] {
     visualizer(),
     importToCDN({
       modules: [
-        autoComplete('vue'),
+        {
+          name: 'vue',
+          var: 'Vue',
+          path: 'https://unpkg.com/vue@3.2.47/dist/vue.global.prod.js'
+        },
         {
           name: 'vue-demi',
           var: 'VueDemi',
