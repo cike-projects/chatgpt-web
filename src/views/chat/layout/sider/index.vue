@@ -1,12 +1,12 @@
 <script setup lang='ts'>
 import type { CSSProperties } from 'vue'
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, h, reactive, ref, watch } from 'vue'
 import { NButton, NLayoutSider } from 'naive-ui'
 import List from './List.vue'
 import Footer from './Footer.vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { PromptStore } from '@/components/common'
+import { PromptStore, SvgIcon } from '@/components/common'
 import Announcement from '@/components/common/Announcement.vue'
 
 const appStore = useAppStore()
@@ -18,19 +18,28 @@ const showAnnouncement = ref(false)
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
+const renderIcon = (icon: string) => {
+  return () => {
+    return h(SvgIcon, { icon })
+  }
+}
+
 const options = reactive([
   {
     label: '使用下面的机器人创建会话',
     key: 'default',
+    icon: renderIcon('ic:outline-tips-and-updates'),
     disabled: true,
   },
   {
     label: '暴躁老哥',
     key: '暴躁老哥',
+    icon: renderIcon('ri:message-3-line'),
   },
   {
     label: 'Code 助手',
     key: 'Code 助手',
+    icon: renderIcon('solar:code-bold-duotone'),
   },
 ])
 
