@@ -31,8 +31,7 @@ const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
 
-const { uuid } = route.params as { uuid: string }
-const roomId = uuid
+let { uuid } = route.params as { uuid: string }
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
 
@@ -78,6 +77,8 @@ async function onConversation() {
       requestOptions: { prompt: message, options: null },
     },
   )
+
+  uuid = `${chatStore.active}`
   scrollToBottom()
 
   loading.value = true
@@ -93,7 +94,7 @@ async function onConversation() {
     +uuid,
     {
       dateTime: new Date().toLocaleString(),
-      text: '',
+      text: '思考中, 请稍等...',
       loading: true,
       inversion: false,
       error: false,
@@ -108,7 +109,7 @@ async function onConversation() {
     const fetchChatAPIOnce = async () => {
       await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
-        conversationId: roomId,
+        conversationId: chatStore.active,
         options,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
@@ -143,8 +144,7 @@ async function onConversation() {
             }
 
             scrollToBottomIfAtBottom()
-          }
-          catch (error) {
+          } catch (error) {
             //
           }
         },
@@ -153,8 +153,7 @@ async function onConversation() {
     }
 
     await fetchChatAPIOnce()
-  }
-  catch (error: any) {
+  } catch (error: any) {
     const errorMessage = error?.message ?? t('common.wrong')
 
     if (error.message === 'canceled') {
@@ -198,8 +197,7 @@ async function onConversation() {
       },
     )
     scrollToBottomIfAtBottom()
-  }
-  finally {
+  } finally {
     loading.value = false
   }
 }
@@ -226,7 +224,7 @@ async function onRegenerate(index: number) {
     index,
     {
       dateTime: new Date().toLocaleString(),
-      text: '',
+      text: '思考中, 请稍等...',
       inversion: false,
       error: false,
       loading: true,
@@ -240,7 +238,7 @@ async function onRegenerate(index: number) {
     const fetchChatAPIOnce = async () => {
       await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
-        conversationId: roomId,
+        conversationId: chatStore.active,
         options,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
@@ -273,8 +271,7 @@ async function onRegenerate(index: number) {
               message = ''
               return fetchChatAPIOnce()
             }
-          }
-          catch (error) {
+          } catch (error) {
             //
           }
         },
@@ -282,8 +279,7 @@ async function onRegenerate(index: number) {
       updateChatSome(+uuid, index, { loading: false })
     }
     await fetchChatAPIOnce()
-  }
-  catch (error: any) {
+  } catch (error: any) {
     if (error.message === 'canceled') {
       updateChatSome(
         +uuid,
@@ -310,8 +306,7 @@ async function onRegenerate(index: number) {
         requestOptions: { prompt: message, options: { ...options } },
       },
     )
-  }
-  finally {
+  } finally {
     loading.value = false
   }
 }
@@ -347,11 +342,9 @@ function handleExport() {
         d.loading = false
         ms.success(t('chat.exportSuccess'))
         Promise.resolve()
-      }
-      catch (error: any) {
+      } catch (error: any) {
         ms.error(t('chat.exportFailed'))
-      }
-      finally {
+      } finally {
         d.loading = false
       }
     },
@@ -394,8 +387,7 @@ function handleEnter(event: KeyboardEvent) {
       event.preventDefault()
       handleSubmit()
     }
-  }
-  else {
+  } else {
     if (event.key === 'Enter' && event.ctrlKey) {
       event.preventDefault()
       handleSubmit()
@@ -415,22 +407,22 @@ function handleStop() {
 // 理想状态下其实应该是key作为索引项,但官方的renderOption会出现问题，所以就需要value反renderLabel实现
 const searchOptions = computed(() => {
   if (prompt.value.startsWith('/')) {
-    return promptTemplate.value.filter((item: { key: string }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
+    return promptTemplate.value.filter((item: {
+      key: string
+    }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
       return {
         label: obj.value,
         value: obj.value,
       }
     })
-  }
-  else if (prompt.value.startsWith('@')) {
+  } else if (prompt.value.startsWith('@')) {
     return ['@image256x256 ', '@image512x512 ', '@image1024x1024 '].filter(it => it.startsWith(prompt.value)).map((suffix) => {
       return {
         label: suffix,
         value: suffix,
       }
     })
-  }
-  else {
+  } else {
     return []
   }
 })
@@ -575,12 +567,15 @@ const promptSuggests = reactive([
                 <NGi v-for="promptSuggest in promptSuggests">
                   <NSpace vertical>
                     <h2 class="text-md text-center">
-                      <SvgIcon :icon="promptSuggest.icon" class="mb-2 inline-block text-lg text-black dark:text-white" />
+                      <SvgIcon :icon="promptSuggest.icon"
+                               class="mb-2 inline-block text-lg text-black dark:text-white" />
                       <p>
                         {{ promptSuggest.title }}
                       </p>
                     </h2>
-                    <div v-for="suggest in promptSuggest.data" :title="suggest.name" class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800" @click="fillInput(suggest.prompt)">
+                    <div v-for="suggest in promptSuggest.data" :title="suggest.name"
+                         class="text-ellipsis-1 cursor-pointer rounded bg-neutral-100 p-4 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+                         @click="fillInput(suggest.prompt)">
                       {{ suggest.name }}
                     </div>
                   </NSpace>
@@ -644,16 +639,26 @@ const promptSuggests = reactive([
                 @focus="handleFocus"
                 @blur="handleBlur"
                 @keypress="handleEnter"
-              />
+              >
+                <template #suffix>
+                  <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
+                    <template #icon>
+                      <span class="dark:text-black">
+                        <SvgIcon icon="ri:send-plane-fill" />
+                      </span>
+                    </template>
+                  </NButton>
+                </template>
+              </NInput>
             </template>
           </NAutoComplete>
-          <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
-            <template #icon>
-              <span class="dark:text-black">
-                <SvgIcon icon="ri:send-plane-fill" />
-              </span>
-            </template>
-          </NButton>
+<!--          <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">-->
+<!--            <template #icon>-->
+<!--              <span class="dark:text-black">-->
+<!--                <SvgIcon icon="ri:send-plane-fill" />-->
+<!--              </span>-->
+<!--            </template>-->
+<!--          </NButton>-->
         </div>
       </div>
     </footer>

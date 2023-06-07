@@ -8,6 +8,11 @@ import { useIconRender } from '@/hooks/useIconRender'
 import { t } from '@/locales'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { copyToClip } from '@/utils/copy'
+import { useAppStore } from '@/store'
+
+const appStore = useAppStore()
+
+const rightSide = computed(() => appStore.rightSide)
 
 interface Props {
   dateTime?: string
@@ -96,21 +101,21 @@ async function handleCopy() {
   <div
     ref="messageRef"
     class="flex w-full mb-6 overflow-hidden"
-    :class="[{ 'flex-row-reverse': inversion }]"
+    :class="[{ 'flex-row-reverse': inversion && rightSide }]"
   >
     <div
       class="flex items-center justify-center flex-shrink-0 h-8 overflow-hidden rounded-full basis-8"
-      :class="[inversion ? 'ml-2' : 'mr-2']"
+      :class="[inversion && rightSide ? 'ml-2' : 'mr-2']"
     >
       <AvatarComponent :image="inversion" />
     </div>
-    <div class="overflow-hidden text-sm " :class="[inversion ? 'items-end' : 'items-start']">
-      <p class="text-xs text-[#b4bbc4]" :class="[inversion ? 'text-right' : 'text-left']">
+    <div class="overflow-hidden text-sm " :class="[inversion && rightSide ? 'items-end' : 'items-start']">
+      <p class="text-xs text-[#b4bbc4]" :class="[inversion && rightSide ? 'text-right' : 'text-left']">
         {{ dateTime }}
       </p>
       <div
         class="flex items-end gap-1 mt-2"
-        :class="[inversion ? 'flex-row-reverse' : 'flex-row']"
+        :class="[inversion && rightSide ? 'flex-row-reverse' : 'flex-row']"
       >
         <TextComponent
           ref="textRef"
@@ -130,7 +135,7 @@ async function handleCopy() {
           </button>
           <NDropdown
             :trigger="isMobile ? 'click' : 'hover'"
-            :placement="!inversion ? 'right' : 'left'"
+            :placement="!inversion ? 'right' : rightSide ? 'left' : 'right'"
             :options="options"
             @select="handleSelect"
           >

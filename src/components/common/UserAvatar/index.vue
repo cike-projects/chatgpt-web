@@ -14,7 +14,7 @@ async function fetchWalletInfo() {
   if (walletInfo.value.availableValue === 0 || walletInfo.value.totalValue === 0) {
     walletInfo.value.availablePercentage = 0
   } else {
-    walletInfo.value.availablePercentage = (walletInfo.value.availableValue / walletInfo.value.totalValue * 100).toFixed(0)
+    walletInfo.value.availablePercentage = Number.parseFloat((walletInfo.value.availableValue / walletInfo.value.totalValue * 100).toFixed(0))
   }
 }
 
