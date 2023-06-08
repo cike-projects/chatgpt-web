@@ -44,6 +44,11 @@ const chatColor = function (module: string) {
             </div>
             <div class="flex h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c]">
               <div class="m-auto text-center" @click="gotoRoute('BotSettings')">
+                <SvgIcon icon="ri:image-2-line" class="inline-block text-2xl" :class="chatColor('BotSettings')" />
+              </div>
+            </div>
+            <div class="flex h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c]">
+              <div class="m-auto text-center" @click="gotoRoute('BotSettings')">
                 <SvgIcon icon="charm:robot" class="inline-block text-2xl" :class="chatColor('BotSettings')" />
               </div>
             </div>
