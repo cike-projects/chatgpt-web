@@ -12,7 +12,7 @@ import { useAppStore } from '@/store'
 
 const appStore = useAppStore()
 
-const rightSide = computed(() => appStore.rightSide)
+const rightSide = computed(() => appStore.sidePattern === 'DIFF')
 
 interface Props {
   dateTime?: string

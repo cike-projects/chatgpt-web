@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { NButton, NPopconfirm, NSelect } from 'naive-ui'
-import type { Language, Theme } from '@/store/modules/app/helper'
+import type { Language, SidePattern, Theme } from '@/store/modules/app/helper'
 import { useAppStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 
@@ -10,6 +10,7 @@ const appStore = useAppStore()
 const { isMobile } = useBasicLayout()
 
 const theme = computed(() => appStore.theme)
+const sidePattern = computed(() => appStore.sidePattern)
 
 const language = computed({
   get() {
@@ -45,6 +46,11 @@ const languageOptions: { label: string; key: Language; value: Language }[] = [
   { label: '简体中文', key: 'zh-CN', value: 'zh-CN' },
 ]
 
+const sideOptions: { label: string; key: SidePattern; value: SidePattern }[] = [
+  { label: '同一侧', key: 'SAME', value: 'SAME' },
+  { label: '两侧', key: 'DIFF', value: 'DIFF' },
+]
+
 function clearData(): void {
   localStorage.removeItem('chatStorage')
   location.reload()
@@ -68,6 +74,13 @@ function clearData(): void {
             :value="language"
             :options="languageOptions"
             @update-value="value => appStore.setLanguage(value)"
+          />
+        </n-form-item>
+        <n-form-item label="头像对齐方式">
+          <NSelect
+            :value="sidePattern"
+            :options="sideOptions"
+            @update-value="value => appStore.setSide(value)"
           />
         </n-form-item>
         <n-form-item label="清理缓存">
