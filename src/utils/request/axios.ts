@@ -6,11 +6,16 @@ const service = axios.create({
   baseURL: import.meta.env.VITE_APP_API_ALL_BASE_URL,
 })
 
+const goUrls = ['/member/wallet', '/member/info']
+
 service.interceptors.request.use(
   (config) => {
     const token = useAuthStore().token
     if (token)
       config.headers.Authorization = `Bearer ${token}`
+    if (goUrls.includes(config.url)) {
+      config.url = import.meta.env.VITE_APP_API_GO_BASE_URL + config.url
+    }
     return config
   },
   (error) => {

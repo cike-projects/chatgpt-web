@@ -91,7 +91,7 @@ export function fetchChatAPIProcess<T = any>(
 
 export function authLogin<T>(username: string, password: string) {
   return post<T>({
-    url: 'auth/login/withPassword',
+    url: '/auth/login/withPassword',
     data: {
       username,
       password,
@@ -101,7 +101,7 @@ export function authLogin<T>(username: string, password: string) {
 
 export function authSignup<T>(username: string, password: string, email: string, invitationCode?: string | null) {
   return post<T>({
-    url: 'auth/signup',
+    url: '/auth/signup',
     data: {
       username,
       password,
@@ -113,7 +113,7 @@ export function authSignup<T>(username: string, password: string, email: string,
 
 export function checkToken<T>() {
   return get<T>({
-    url: 'auth/checkToken',
+    url: '/auth/checkToken',
   })
 }
 
