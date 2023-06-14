@@ -43,10 +43,14 @@ const options = reactive([
   },
 ])
 
-function handleAdd() {
-  chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
+function handleAdd(bot: string) {
+  chatStore.addHistory({botName: bot, title: 'New Chat', uuid: Date.now(), isEdit: false })
   if (isMobile.value)
     appStore.setSiderCollapsed(true)
+}
+
+function handleSelect(key: string) {
+  handleAdd(key)
 }
 
 function handleUpdateCollapsed() {
@@ -101,10 +105,10 @@ watch(
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
           <NSpace justify="space-between">
-            <NButton dashed block @click="handleAdd">
+            <NButton dashed block @click="handleAdd('我超会的')">
               {{ $t('chat.newChatButton') }}
             </NButton>
-            <n-dropdown :options="options">
+            <n-dropdown :options="options" @select="handleSelect">
               <n-button class="dark:bg-green-600">+</n-button>
             </n-dropdown>
           </NSpace>

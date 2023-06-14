@@ -15,6 +15,7 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
+import SimpleUserAvatar from '@/components/common/SimpleUserAvatar.vue'
 
 let controller = new AbortController()
 
@@ -34,6 +35,7 @@ const { usingContext, toggleUsingContext } = useUsingContext()
 let { uuid } = route.params as { uuid: string }
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
+const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActive)
 
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
@@ -550,6 +552,12 @@ const promptSuggests = reactive([
       @export="handleExport"
       @toggle-using-context="toggleUsingContext"
     />
+    <div class="h-[60px] p-[12px] align-center border-b dark:border-neutral-800 bg-white/80 dark:bg-black/20" v-if="+uuid !== 0">
+      <NSpace style="align-items: center; max-width: 400px">
+        <SimpleUserAvatar />
+        <span>{{ currentChatHistory.botName }}</span>
+      </NSpace>
+    </div>
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
         <div
@@ -652,13 +660,6 @@ const promptSuggests = reactive([
               </NInput>
             </template>
           </NAutoComplete>
-<!--          <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">-->
-<!--            <template #icon>-->
-<!--              <span class="dark:text-black">-->
-<!--                <SvgIcon icon="ri:send-plane-fill" />-->
-<!--              </span>-->
-<!--            </template>-->
-<!--          </NButton>-->
         </div>
       </div>
     </footer>
