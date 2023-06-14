@@ -5,7 +5,7 @@ const service = axios.create({
   baseURL: import.meta.env.VITE_APP_API_ALL_BASE_URL,
 })
 
-const goUrls = ['/member/wallet', '/member/info']
+const goUrls = ['/member/wallet', '/member/info', 'auth/checkToken']
 
 service.interceptors.request.use(
   (config) => {
