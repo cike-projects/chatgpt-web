@@ -123,3 +123,9 @@ export function fetchVerify<T>(token: string) {
     data: { token },
   })
 }
+
+export function fetchPublicBots<T = any>() {
+  return get<T>({
+    url: '/bot/publicBot',
+  })
+}
