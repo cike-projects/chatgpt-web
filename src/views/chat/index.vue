@@ -112,6 +112,7 @@ async function onConversation() {
       await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
         conversationId: chatStore.active,
+        botId: currentChatHistory.value?.botId,
         options,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
@@ -241,6 +242,7 @@ async function onRegenerate(index: number) {
       await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
         conversationId: chatStore.active,
+        botId: currentChatHistory.value.botId,
         options,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {

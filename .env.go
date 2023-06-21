@@ -1,5 +1,5 @@
 # Glob API URL
-VITE_APP_API_ALL_BASE_URL=http://52.15.253.100:38801/chatapi
+VITE_APP_API_ALL_BASE_URL=http://127.0.0.1:38801/chattyai
 VITE_APP_API_GO_BASE_URL=http://127.0.0.1:38083/chattyai
 
 # Whether long replies are supported, which may result in higher API fees

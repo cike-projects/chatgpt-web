@@ -12,4 +12,11 @@ declare namespace Settings {
     avatar?: string
     invitationCode?: string
   }
+
+  interface BotInfo {
+    avatar: string
+    name: string
+    desc: string
+    botId: string
+  }
 }

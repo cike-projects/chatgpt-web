@@ -57,7 +57,8 @@ export function memberModifyPwd<T = any>(oldPassword: string, newPassword: strin
 export function fetchChatAPIProcess<T = any>(
   params: {
     prompt: string
-    conversationId: string
+    conversationId: string | number | null
+    botId: string | null | undefined
     options?: { conversationId?: string; parentMessageId?: string }
     signal?: GenericAbortSignal
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void
@@ -69,6 +70,7 @@ export function fetchChatAPIProcess<T = any>(
   let data: Record<string, any> = {
     prompt: params.prompt,
     conversationId: params.conversationId,
+    botId: params.botId,
     options: params.options,
   }
 

@@ -15,6 +15,7 @@ declare namespace Chat {
 		isEdit: boolean
 		uuid: number
     botName: string
+    botId: string | null
 	}
 
 	interface ChatState {
