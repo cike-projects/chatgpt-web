@@ -26,6 +26,7 @@ async function fetchAllPublicBots() {
   data.forEach((element, index) => options.value?.push({
     label: element.name,
     key: element.botId,
+    avatar: element.avatar,
   }))
 }
 
@@ -33,14 +34,14 @@ onMounted(() => {
   fetchAllPublicBots()
 })
 
-function handleAdd(botname: string, botId: string | null) {
-  chatStore.addHistory({ botName: botname, botId: botId, title: 'New Chat', uuid: Date.now(), isEdit: false })
+function handleAdd(botName: string, botId: string | null, avatar: string | null) {
+  chatStore.addHistory({ botName, botId, avatar, title: 'New Chat', uuid: Date.now(), isEdit: false })
   if (isMobile.value)
     appStore.setSiderCollapsed(true)
 }
 
 function handleSelect(key: string | number, option: DropdownOption) {
-  handleAdd(option.label, key)
+  handleAdd(option.label, key, option.avatar)
 }
 
 function handleUpdateCollapsed() {
@@ -95,7 +96,7 @@ watch(
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
           <NSpace justify="space-between">
-            <NButton dashed block @click="handleAdd('我超会的', null)">
+            <NButton dashed block @click="handleAdd('我超会的', null, null)">
               {{ $t('chat.newChatButton') }}
             </NButton>
             <n-dropdown :options="options" @select="handleSelect">

@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import { computed, h, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { NAutoComplete, NButton, NInput, NTag, useDialog, useMessage } from 'naive-ui'
+import {NAutoComplete, NAvatar, NButton, NInput, NTag, useDialog, useMessage} from 'naive-ui'
 import html2canvas from 'html2canvas'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
@@ -15,7 +15,8 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
-import SimpleUserAvatar from '@/components/common/SimpleUserAvatar.vue'
+import defaultAvatar from '@/assets/avatar.jpg'
+import {isString} from '@/utils/is'
 
 let controller = new AbortController()
 
@@ -554,9 +555,23 @@ const promptSuggests = reactive([
       @export="handleExport"
       @toggle-using-context="toggleUsingContext"
     />
-    <div class="h-[60px] p-[12px] align-center border-b dark:border-neutral-800 bg-white/80 dark:bg-black/20" v-if="+uuid !== 0">
+    <div v-if="+uuid !== 0" class="h-[60px] p-[12px] align-center border-b dark:border-neutral-800 bg-white/80 dark:bg-black/20">
       <NSpace style="align-items: center; max-width: 400px">
-        <SimpleUserAvatar />
+        <div class="flex items-center justify-center overflow-hidden">
+          <div class="w-9 h-9 overflow-hidden rounded-full shrink-0 cursor-pointer">
+            <template v-if="isString(currentChatHistory.avatar) && currentChatHistory.avatar.length > 0">
+              <NAvatar
+                :size="36"
+                round
+                :src="currentChatHistory.avatar"
+                :fallback-src="defaultAvatar"
+              />
+            </template>
+            <template v-else>
+              <NAvatar :size="36" round :src="defaultAvatar" />
+            </template>
+          </div>
+        </div>
         <span>{{ currentChatHistory.botName }}</span>
       </NSpace>
     </div>

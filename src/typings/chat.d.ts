@@ -16,6 +16,7 @@ declare namespace Chat {
 		uuid: number
     botName: string
     botId: string | null
+    avatar: string | null
 	}
 
 	interface ChatState {
